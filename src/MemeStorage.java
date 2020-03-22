@@ -111,6 +111,13 @@ public class MemeStorage extends JFrame {
         });
         propertiesMenu.add(info);
 
+        try {
+            checkFiles();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         revalidate();
     }
 
@@ -346,6 +353,17 @@ public class MemeStorage extends JFrame {
 
         return ret;
 
+    }
+
+    void checkFiles() throws IOException {
+        if(!new File("storage/").exists())
+            new File("storage/").mkdir();
+
+        if(!new File("storage/images/").exists())
+            new File("storage/images/").mkdir();
+
+        if(!new File("storage/tags/").exists())
+            new File("storage/tags/").mkdir();
     }
 
     void setTrayIcon(){
