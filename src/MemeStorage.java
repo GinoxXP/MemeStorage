@@ -15,15 +15,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class MemeStorage extends JFrame {
-    String programName;
+    final String programName = "MemeStorage";
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.1";
+    final String VERSION = "0.2";
 
-    public MemeStorage(String programName) {
-        super(programName);
-        this.programName = programName;
+    public MemeStorage() {
+        setTitle(programName);
+
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         try {
             setIconImage(ImageIO.read(new File("files/icon32.png")));
@@ -223,12 +223,40 @@ public class MemeStorage extends JFrame {
 
                 JLabel imageLabel = new JLabel();
                 int finalI = i;
+                File imageFile = filesArr[i];
                 imageLabel.addMouseListener(new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent mouseEvent) {
                         if(mouseEvent.getButton() == MouseEvent.BUTTON1){
                             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                                    new ImageTransferable(filesArr[finalI]), null);
+                                    new ImageTransferable(imageFile), null);
+                        }
+                        if(mouseEvent.getButton() == MouseEvent.BUTTON3){
+                            JPopupMenu imageSettingsMenu = new JPopupMenu();
+
+                            JMenuItem deleteImage = new JMenuItem("Delete");
+                            deleteImage.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    imageFile.delete();
+                                    JOptionPane.showMessageDialog(imageLabel, "Image successful delete", "Delete image", JOptionPane.INFORMATION_MESSAGE);
+                                    showAllImages();
+                                }
+                            });
+                            imageSettingsMenu.add(deleteImage);
+
+                            JMenuItem infoImage = new JMenuItem("Info");
+                            infoImage.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    JOptionPane.showMessageDialog(imageLabel,  "Name " + imageFile.getName() + "\n" +
+                                                                                        "Path " + imageFile.getAbsolutePath() + "\n" +
+                                                                                        "Size " + (float)(imageFile.length()/1024) + " KB");
+                                }
+                            });
+                            imageSettingsMenu.add(infoImage);
+
+                            imageSettingsMenu.show(imageLabel,0, 50);
                         }
                     }
 
@@ -410,6 +438,6 @@ public class MemeStorage extends JFrame {
     }
 
     public static void main(String[] args){
-        MemeStorage memeStorage = new MemeStorage("MemeStorage");
+        MemeStorage memeStorage = new MemeStorage();
     }
 }
