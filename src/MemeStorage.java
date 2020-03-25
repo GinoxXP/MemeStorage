@@ -245,6 +245,16 @@ public class MemeStorage extends JFrame {
                             });
                             imageSettingsMenu.add(deleteImage);
 
+                            JMenuItem tagsImage = new JMenuItem("Tags");
+                            tagsImage.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    TagsFrame tagsFrame = new TagsFrame(imageFile);
+                                    tagsFrame.setBounds(imageLabel.getBounds().x, imageLabel.getBounds().y, 400, 400);
+                                }
+                            });
+                            imageSettingsMenu.add(tagsImage);
+
                             JMenuItem infoImage = new JMenuItem("Info");
                             infoImage.addActionListener(new ActionListener() {
                                 @Override
