@@ -48,71 +48,83 @@ public class TagsFrame extends JFrame {
     }
 
     private void acceptTags(String[] tags){
-        String[] allTags = getAllTags();
-        for(int i = 0; i < tags.length; i++) {
-            boolean isNew = true;
-            for (int j = 0; j < allTags.length; j++) {
-                if(tags[i].equals(allTags[j]))
-                    isNew = false;
-            }
-            if(isNew)
-                addNewTag(tags[i]);
+        String[] thisImageTags = getThisImageTags();
+
+        for(String tag : thisImageTags){
+            removeTag(tag);
+        }
+        for(String tag : tags){
+            addTag(tag);
         }
 
-        String[] thisImageTags = getThisImageTags();
-        for(int i = 0; i < tags.length; i++) {
-            boolean isRemove = true;
-            for (int j = 0; j < thisImageTags.length; j++) {
-                if(tags[i].equals(thisImageTags[j]))
-                    isRemove = false;
-            }
-            if(isRemove)
-                removeTag(tags[i]);
-        }
+        checkEmptyTags();
     }
 
     private void removeTag(String tag){
-        File file = new File("storage/tags/" + tag);
-        ArrayList<String> images = new ArrayList<>();
+        File sourceFile = new File("storage/tags/" + tag);
+        File newFile = new File("storage/tags/" + "." + tag);
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            while(true){
-                try {
-                    String line = reader.readLine();
-                    if(line == null)
-                        break;
+            BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(newFile));
 
-                    if(!line.equals(tag))
-                        images.add(line);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.equals(image.getName())) {
+                    writer.write(line);
+                    writer.newLine();
                 }
             }
-            try {
-                FileWriter writer = new FileWriter(file, false);
-                for(int i = 0; i < images.size(); i++){
-                    writer.write(images.get(i));
-                }
-                writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            reader.close();
+            writer.close();
+            sourceFile.delete();
+            newFile.renameTo(sourceFile);
+
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void addNewTag(String tag){
+    private void addTag(String tag){
         File file = new File("storage/tags/" + tag);
         if(!file.exists()){
             try {
                 file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-                FileWriter writer = new FileWriter(file, true);
-                writer.write(image.getName() + "\n");
-                writer.flush();
+        try {
+            FileWriter writer = new FileWriter(file, true);
+            writer.write(image.getName() + "\n");
+            writer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkEmptyTags(){
+        File[] fileArr = new File("storage/tags").listFiles();
+        for(int i = 0; i < fileArr.length; i++){
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(fileArr[i]));
+
+                boolean isEmpty = false;
+                if(reader.readLine()==null)
+                    isEmpty = true;
+
+                reader.close();
+
+                if(isEmpty)
+                    fileArr[i].delete();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

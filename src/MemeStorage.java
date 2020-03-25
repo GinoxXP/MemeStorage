@@ -62,14 +62,14 @@ public class MemeStorage extends JFrame {
         });
         showMenu.add(showAllItem);
 
-//        JMenuItem search = new JMenuItem("Search");                                                                   In next releases
-//        search.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent actionEvent) {
-//
-//            }
-//        });
-//        menuBar.add(search);
+        JMenuItem search = new JMenuItem("Search");
+        search.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+            }
+        });
+        menuBar.add(search);
 
         JMenuItem addImageFromClipboard = new JMenuItem("Add image from clipboard");
         addImageFromClipboard.addActionListener(new ActionListener() {
@@ -443,8 +443,6 @@ public class MemeStorage extends JFrame {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-
-        //trayIcon.displayMessage("MemeStorage", "Is started!", TrayIcon.MessageType.INFO);
     }
 
     public static void main(String[] args){
