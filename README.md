@@ -10,10 +10,14 @@ To get a picture from the collection, click on its thumbnail. Then the picture w
 
 When closing, MemeStorage will be minimized to tray to allow the user to quickly open the collection if necessary.
 
+### What is the difference from an file explorer?
+MemeStorage gives the user the opportunity to offer tags - words
+or even whole phrases. Thanks to the tags, the user can easily find the desired picture.
+![Camera sevtors](tags.png)
+
 ### Future updates
 Future updates to MemeStorage will add:
-- the ability to advertise to tag images, for quick search;
-- the ability to import a collection;
+- Create your own collection;
 - Hot keys for faster user interaction;
 - Create your own language packs.
 
@@ -39,10 +43,14 @@ MemeStorage позволяет хранить все мемасики и сме�
 
 При закрытии MemeStorage свернется в трей, чтобы дать пользователю быстро открыть коллекцию при необходимости.
 
+### В чем отличие от обычного проводника?
+MemeStorage предоставляет пользователю возможность добавлять к картинкам теги - слова
+или даже целые фразы. Благодаря тегам пользователь может легко найти нужную картинку.
+![Camera sevtors](tags.png)
+
 ### Будущие обновления
 В будущих обновлениях MemeStorage добавятся:
-- Возможность добавлять к картинкам теги для быстрого поиска;
-- Возможность импортировать коллекции;
+- Создание своих коллекций;
 - Горячие клавиши для более быстрого взаимодействия с пользователем;
 - Создание своих языковых пакетов.
 

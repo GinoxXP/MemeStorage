@@ -22,7 +22,7 @@ public class MemeStorage extends JFrame {
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.2";
+    final String VERSION = "0.3";
 
     public MemeStorage() {
         setTitle(programName);
@@ -133,6 +133,7 @@ public class MemeStorage extends JFrame {
 
 
         revalidate();
+        repaint();
     }
 
     void showSettings(){
@@ -312,6 +313,7 @@ public class MemeStorage extends JFrame {
             }
         }
         revalidate();
+        repaint();
     }
 
     void showTagImages(){
