@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Random;
 
 public class MemeStorage extends JFrame {
     final String programName = "MemeStorage";
@@ -117,6 +118,8 @@ public class MemeStorage extends JFrame {
             e.printStackTrace();
         }
 
+        showAllImages();
+        
 
         revalidate();
     }
@@ -301,18 +304,21 @@ public class MemeStorage extends JFrame {
     }
 
     String generateName(){
-        String name = "img";
+        String name;
+        do{
+            name = "img-";
 
-        File[] arrFiles = new File("storage/images").listFiles();
-        int delta = 0;
+            String[] letters = {"Q", "q", "W", "w", "E", "e", "R", "r", "T", "t", "Y", "y", "U", "u", "I", "i", "O", "o", "P", "p",
+                    "A", "a", "S", "s", "D", "d", "F", "f", "G", "g", "H", "h", "J", "j", "K", "k", "L", "l",
+                    "Z", "z", "X", "x", "C", "c", "V", "v", "B", "b", "N", "n", "M", "m",
+                    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
 
-        while(true)
-            if(!new File(name + (arrFiles.length+delta)).exists()){
-                name += arrFiles.length;
-                break;
+            for(int i = 0 ; i < 16; i++){
+                name += letters[new Random().nextInt(letters.length)];
             }
 
-        name += "." + defaultImagesFormat;
+            name += "." + defaultImagesFormat;
+        }while(new File("storage/images/" + name).exists());
 
 
         return name;
