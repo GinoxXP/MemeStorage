@@ -1,5 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -9,17 +11,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class MemeStorage extends JFrame {
     final String programName = "MemeStorage";
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.2";
+    final String VERSION = "0.3";
 
     public MemeStorage() {
         setTitle(programName);
@@ -62,11 +65,20 @@ public class MemeStorage extends JFrame {
         });
         showMenu.add(showAllItem);
 
-//        JMenuItem search = new JMenuItem("Search");                                                                   In next releases
+        JMenuItem showTagImageItem = new JMenuItem("Show tag image");
+        showTagImageItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                showTagImages();
+            }
+        });
+        showMenu.add(showTagImageItem);
+
+//        JMenuItem search = new JMenuItem("Search");
 //        search.addActionListener(new ActionListener() {
 //            @Override
 //            public void actionPerformed(ActionEvent actionEvent) {
-//
+//                showSearchTagImages();
 //            }
 //        });
 //        menuBar.add(search);
@@ -117,8 +129,11 @@ public class MemeStorage extends JFrame {
             e.printStackTrace();
         }
 
+        showAllImages();
+
 
         revalidate();
+        repaint();
     }
 
     void showSettings(){
@@ -245,6 +260,16 @@ public class MemeStorage extends JFrame {
                             });
                             imageSettingsMenu.add(deleteImage);
 
+                            JMenuItem tagsImage = new JMenuItem("Tags");
+                            tagsImage.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent actionEvent) {
+                                    TagsFrame tagsFrame = new TagsFrame(imageFile);
+                                    tagsFrame.setBounds(imageLabel.getBounds().x, imageLabel.getBounds().y, 400, 400);
+                                }
+                            });
+                            imageSettingsMenu.add(tagsImage);
+
                             JMenuItem infoImage = new JMenuItem("Info");
                             infoImage.addActionListener(new ActionListener() {
                                 @Override
@@ -288,21 +313,133 @@ public class MemeStorage extends JFrame {
             }
         }
         revalidate();
+        repaint();
+    }
+
+    void showTagImages(){
+        mainPanel.removeAll();
+
+        String[] tagsFile = new File("storage/tags/").list();
+        if(tagsFile.length > 0){
+            JList<String> tagsList = new JList<>(tagsFile);
+            tagsList.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                    try {
+                        mainPanel.removeAll();
+                        mainPanel.add(tagsList);
+                        mainPanel.revalidate();
+
+                        BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            File image = new File("storage/images/" + line);
+
+                            BufferedImage img = ImageIO.read(image);
+                            img = scale(img, 100);
+                            ImageIcon icon = new ImageIcon(img);
+
+                            JLabel imageLabel = new JLabel();
+                            imageLabel.addMouseListener(new MouseListener() {
+                                @Override
+                                public void mouseClicked(MouseEvent mouseEvent) {
+                                    if(mouseEvent.getButton() == MouseEvent.BUTTON1){
+                                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                                                new ImageTransferable(image), null);
+                                    }
+                                    if(mouseEvent.getButton() == MouseEvent.BUTTON3){
+                                        JPopupMenu imageSettingsMenu = new JPopupMenu();
+
+                                        JMenuItem deleteImage = new JMenuItem("Delete");
+                                        deleteImage.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent actionEvent) {
+                                                image.delete();
+                                                JOptionPane.showMessageDialog(imageLabel, "Image successful delete", "Delete image", JOptionPane.INFORMATION_MESSAGE);
+                                                showAllImages();
+                                            }
+                                        });
+                                        imageSettingsMenu.add(deleteImage);
+
+                                        JMenuItem tagsImage = new JMenuItem("Tags");
+                                        tagsImage.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent actionEvent) {
+                                                TagsFrame tagsFrame = new TagsFrame(image);
+                                                tagsFrame.setBounds(imageLabel.getBounds().x, imageLabel.getBounds().y, 400, 400);
+                                            }
+                                        });
+                                        imageSettingsMenu.add(tagsImage);
+
+                                        JMenuItem infoImage = new JMenuItem("Info");
+                                        infoImage.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent actionEvent) {
+                                                JOptionPane.showMessageDialog(imageLabel,  "Name " + image.getName() + "\n" +
+                                                        "Path " + image.getAbsolutePath() + "\n" +
+                                                        "Size " + (float)(image.length()/1024) + " KB");
+                                            }
+                                        });
+                                        imageSettingsMenu.add(infoImage);
+
+                                        imageSettingsMenu.show(imageLabel,0, 50);
+                                    }
+                                }
+
+                                @Override
+                                public void mousePressed(MouseEvent mouseEvent) {}
+
+                                @Override
+                                public void mouseReleased(MouseEvent mouseEvent) {}
+
+                                @Override
+                                public void mouseEntered(MouseEvent mouseEvent) {}
+
+                                @Override
+                                public void mouseExited(MouseEvent mouseEvent) {}
+                            });
+                            imageLabel.setIcon(icon);
+                            mainPanel.add(imageLabel);
+                        }
+                        mainPanel.revalidate();
+                        mainPanel.repaint();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mainPanel.add(new JScrollPane(tagsList));
+            revalidate();
+        }
+    }
+
+    void showSearchTagImages(){
+        mainPanel.removeAll();
+
+        JTextArea searchArea = new JTextArea();
+
+        revalidate();
     }
 
     String generateName(){
-        String name = "img";
+        String name;
+        do{
+            name = "img-";
 
-        File[] arrFiles = new File("storage/images").listFiles();
-        int delta = 0;
+            String[] letters = {"Q", "q", "W", "w", "E", "e", "R", "r", "T", "t", "Y", "y", "U", "u", "I", "i", "O", "o", "P", "p",
+                    "A", "a", "S", "s", "D", "d", "F", "f", "G", "g", "H", "h", "J", "j", "K", "k", "L", "l",
+                    "Z", "z", "X", "x", "C", "c", "V", "v", "B", "b", "N", "n", "M", "m",
+                    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
 
-        while(true)
-            if(!new File(name + (arrFiles.length+delta)).exists()){
-                name += arrFiles.length;
-                break;
+            for(int i = 0 ; i < 16; i++){
+                name += letters[new Random().nextInt(letters.length)];
             }
 
-        name += "." + defaultImagesFormat;
+            name += "." + defaultImagesFormat;
+        }while(new File("storage/images/" + name).exists());
 
 
         return name;
@@ -433,8 +570,6 @@ public class MemeStorage extends JFrame {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-
-        //trayIcon.displayMessage("MemeStorage", "Is started!", TrayIcon.MessageType.INFO);
     }
 
     public static void main(String[] args){
