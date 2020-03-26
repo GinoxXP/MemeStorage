@@ -320,16 +320,13 @@ public class MemeStorage extends JFrame {
         String[] tagsFile = new File("storage/tags/").list();
         if(tagsFile.length > 0){
             JList<String> tagsList = new JList<>(tagsFile);
-            ArrayList<JLabel> images = new ArrayList<>();
             tagsList.addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent listSelectionEvent) {
                     try {
-                        for(JLabel image : images){
-                            mainPanel.remove(image);
-                        }
-                        images.clear();
-
+                        mainPanel.removeAll();
+                        mainPanel.add(tagsList);
+                        mainPanel.revalidate();
 
                         BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
 
@@ -401,10 +398,10 @@ public class MemeStorage extends JFrame {
                                 public void mouseExited(MouseEvent mouseEvent) {}
                             });
                             imageLabel.setIcon(icon);
-                            images.add(imageLabel);
                             mainPanel.add(imageLabel);
                         }
-                        revalidate();
+                        mainPanel.revalidate();
+                        mainPanel.repaint();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
