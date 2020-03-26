@@ -1,5 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -9,10 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MemeStorage extends JFrame {
@@ -63,14 +65,23 @@ public class MemeStorage extends JFrame {
         });
         showMenu.add(showAllItem);
 
-        JMenuItem search = new JMenuItem("Search");
-        search.addActionListener(new ActionListener() {
+        JMenuItem showTagImageItem = new JMenuItem("Show tag image");
+        showTagImageItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                showTagImages();
             }
         });
-        menuBar.add(search);
+        showMenu.add(showTagImageItem);
+
+//        JMenuItem search = new JMenuItem("Search");
+//        search.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                showSearchTagImages();
+//            }
+//        });
+//        menuBar.add(search);
 
         JMenuItem addImageFromClipboard = new JMenuItem("Add image from clipboard");
         addImageFromClipboard.addActionListener(new ActionListener() {
@@ -119,7 +130,7 @@ public class MemeStorage extends JFrame {
         }
 
         showAllImages();
-        
+
 
         revalidate();
     }
@@ -300,6 +311,117 @@ public class MemeStorage extends JFrame {
                 e.printStackTrace();
             }
         }
+        revalidate();
+    }
+
+    void showTagImages(){
+        mainPanel.removeAll();
+
+        String[] tagsFile = new File("storage/tags/").list();
+        if(tagsFile.length > 0){
+            JList<String> tagsList = new JList<>(tagsFile);
+            ArrayList<JLabel> images = new ArrayList<>();
+            tagsList.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent listSelectionEvent) {
+                    try {
+                        for(JLabel image : images){
+                            mainPanel.remove(image);
+                        }
+                        images.clear();
+
+
+                        BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            File image = new File("storage/images/" + line);
+
+                            BufferedImage img = ImageIO.read(image);
+                            img = scale(img, 100);
+                            ImageIcon icon = new ImageIcon(img);
+
+                            JLabel imageLabel = new JLabel();
+                            imageLabel.addMouseListener(new MouseListener() {
+                                @Override
+                                public void mouseClicked(MouseEvent mouseEvent) {
+                                    if(mouseEvent.getButton() == MouseEvent.BUTTON1){
+                                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+                                                new ImageTransferable(image), null);
+                                    }
+                                    if(mouseEvent.getButton() == MouseEvent.BUTTON3){
+                                        JPopupMenu imageSettingsMenu = new JPopupMenu();
+
+                                        JMenuItem deleteImage = new JMenuItem("Delete");
+                                        deleteImage.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent actionEvent) {
+                                                image.delete();
+                                                JOptionPane.showMessageDialog(imageLabel, "Image successful delete", "Delete image", JOptionPane.INFORMATION_MESSAGE);
+                                                showAllImages();
+                                            }
+                                        });
+                                        imageSettingsMenu.add(deleteImage);
+
+                                        JMenuItem tagsImage = new JMenuItem("Tags");
+                                        tagsImage.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent actionEvent) {
+                                                TagsFrame tagsFrame = new TagsFrame(image);
+                                                tagsFrame.setBounds(imageLabel.getBounds().x, imageLabel.getBounds().y, 400, 400);
+                                            }
+                                        });
+                                        imageSettingsMenu.add(tagsImage);
+
+                                        JMenuItem infoImage = new JMenuItem("Info");
+                                        infoImage.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent actionEvent) {
+                                                JOptionPane.showMessageDialog(imageLabel,  "Name " + image.getName() + "\n" +
+                                                        "Path " + image.getAbsolutePath() + "\n" +
+                                                        "Size " + (float)(image.length()/1024) + " KB");
+                                            }
+                                        });
+                                        imageSettingsMenu.add(infoImage);
+
+                                        imageSettingsMenu.show(imageLabel,0, 50);
+                                    }
+                                }
+
+                                @Override
+                                public void mousePressed(MouseEvent mouseEvent) {}
+
+                                @Override
+                                public void mouseReleased(MouseEvent mouseEvent) {}
+
+                                @Override
+                                public void mouseEntered(MouseEvent mouseEvent) {}
+
+                                @Override
+                                public void mouseExited(MouseEvent mouseEvent) {}
+                            });
+                            imageLabel.setIcon(icon);
+                            images.add(imageLabel);
+                            mainPanel.add(imageLabel);
+                        }
+                        revalidate();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            mainPanel.add(new JScrollPane(tagsList));
+            revalidate();
+        }
+    }
+
+    void showSearchTagImages(){
+        mainPanel.removeAll();
+
+        JTextArea searchArea = new JTextArea();
+
         revalidate();
     }
 
