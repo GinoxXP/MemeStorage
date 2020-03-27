@@ -22,7 +22,7 @@ public class MemeStorage extends JFrame {
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.3";
+    final String VERSION = "0.3.5";
 
     public MemeStorage() {
         setTitle(programName);
@@ -36,7 +36,6 @@ public class MemeStorage extends JFrame {
         }
 
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(0,5));
 
         scrollPane = new JScrollPane(mainPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -73,15 +72,6 @@ public class MemeStorage extends JFrame {
             }
         });
         showMenu.add(showTagImageItem);
-
-//        JMenuItem search = new JMenuItem("Search");
-//        search.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent actionEvent) {
-//                showSearchTagImages();
-//            }
-//        });
-//        menuBar.add(search);
 
         JMenuItem addImageFromClipboard = new JMenuItem("Add image from clipboard");
         addImageFromClipboard.addActionListener(new ActionListener() {
@@ -184,7 +174,7 @@ public class MemeStorage extends JFrame {
         JLabel authorLabel = new JLabel("GinoxXP, 2020");
         mainPanel.add(authorLabel);
 
-        JLabel linkLabel = new JLabel("Open on GitHub");
+        JLabel linkLabel = new JLabel("<html><u><font color=BLUE>Open on GitHub");
         linkLabel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -227,13 +217,15 @@ public class MemeStorage extends JFrame {
 
     void showAllImages(){
         mainPanel.removeAll();
+
+        JPanel contentPanel = new JPanel(new GridLayout(0,5));
         File[] filesArr = new File("storage/images").listFiles();
 
         for(int i = 0; i < filesArr.length; i++)
         {
             try {
                 BufferedImage img = ImageIO.read(filesArr[i]);
-                img = scale(img, 100);
+                img = scale(img, 90);
                 ImageIcon icon = new ImageIcon(img);
 
                 JLabel imageLabel = new JLabel();
@@ -306,7 +298,8 @@ public class MemeStorage extends JFrame {
                     }
                 });
                 imageLabel.setIcon(icon);
-                mainPanel.add(imageLabel);
+                contentPanel.add(imageLabel);
+                mainPanel.add(contentPanel);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -319,16 +312,32 @@ public class MemeStorage extends JFrame {
     void showTagImages(){
         mainPanel.removeAll();
 
+        mainPanel.setLayout(new BorderLayout());
+
+        JPanel contentPanel = new JPanel(new GridLayout(0,5));
         String[] tagsFile = new File("storage/tags/").list();
         if(tagsFile.length > 0){
             JList<String> tagsList = new JList<>(tagsFile);
+
+            JScrollPane tagsScrollPane = new JScrollPane(tagsList);
+            tagsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            tagsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            tagsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+            JScrollPane contentScrollPane = new JScrollPane(contentPanel);
+            contentScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+            mainPanel.add(tagsScrollPane, BorderLayout.WEST);
+            mainPanel.add(contentScrollPane, BorderLayout.CENTER);
+
             tagsList.addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent listSelectionEvent) {
                     try {
-                        mainPanel.removeAll();
-                        mainPanel.add(tagsList);
-                        mainPanel.revalidate();
+                        contentPanel.removeAll();
+                        contentPanel.revalidate();
 
                         BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
 
@@ -337,7 +346,7 @@ public class MemeStorage extends JFrame {
                             File image = new File("storage/images/" + line);
 
                             BufferedImage img = ImageIO.read(image);
-                            img = scale(img, 100);
+                            img = scale(img, 90);
                             ImageIcon icon = new ImageIcon(img);
 
                             JLabel imageLabel = new JLabel();
@@ -400,28 +409,23 @@ public class MemeStorage extends JFrame {
                                 public void mouseExited(MouseEvent mouseEvent) {}
                             });
                             imageLabel.setIcon(icon);
-                            mainPanel.add(imageLabel);
+                            contentPanel.add(imageLabel);
                         }
-                        mainPanel.revalidate();
-                        mainPanel.repaint();
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        int confirmDelete = JOptionPane.showConfirmDialog(null, "This tag is empty or damaged. Delete this?", "Tag is empty", JOptionPane.YES_NO_OPTION);
+                        if(confirmDelete == JOptionPane.YES_OPTION){
+                            new File("storage/tags/" + tagsList.getSelectedValue()).delete();
+                        }
                     }
                 }
             });
-            mainPanel.add(new JScrollPane(tagsList));
             revalidate();
         }
-    }
-
-    void showSearchTagImages(){
-        mainPanel.removeAll();
-
-        JTextArea searchArea = new JTextArea();
-
-        revalidate();
     }
 
     String generateName(){
