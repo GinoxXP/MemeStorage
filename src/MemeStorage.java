@@ -15,6 +15,8 @@ import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 public class MemeStorage extends JFrame {
@@ -22,7 +24,7 @@ public class MemeStorage extends JFrame {
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.3";
+    final String VERSION = "0.4";
 
     public MemeStorage() {
         setTitle(programName);
@@ -36,7 +38,6 @@ public class MemeStorage extends JFrame {
         }
 
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(0,5));
 
         scrollPane = new JScrollPane(mainPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -73,15 +74,6 @@ public class MemeStorage extends JFrame {
             }
         });
         showMenu.add(showTagImageItem);
-
-//        JMenuItem search = new JMenuItem("Search");
-//        search.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent actionEvent) {
-//                showSearchTagImages();
-//            }
-//        });
-//        menuBar.add(search);
 
         JMenuItem addImageFromClipboard = new JMenuItem("Add image from clipboard");
         addImageFromClipboard.addActionListener(new ActionListener() {
@@ -123,11 +115,7 @@ public class MemeStorage extends JFrame {
         });
         propertiesMenu.add(info);
 
-        try {
-            checkFiles();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        checkFiles();
 
         showAllImages();
 
@@ -184,7 +172,7 @@ public class MemeStorage extends JFrame {
         JLabel authorLabel = new JLabel("GinoxXP, 2020");
         mainPanel.add(authorLabel);
 
-        JLabel linkLabel = new JLabel("Open on GitHub");
+        JLabel linkLabel = new JLabel("<html><u><font color=BLUE>Open on GitHub");
         linkLabel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -227,87 +215,17 @@ public class MemeStorage extends JFrame {
 
     void showAllImages(){
         mainPanel.removeAll();
-        File[] filesArr = new File("storage/images").listFiles();
 
-        for(int i = 0; i < filesArr.length; i++)
+        JPanel contentPanel = new JPanel(new GridLayout(0,5));
+        File[] files = new File("storage/images").listFiles();
+
+        Arrays.sort(files, (f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
+
+        for(int i = 0; i < files.length; i++)
         {
             try {
-                BufferedImage img = ImageIO.read(filesArr[i]);
-                img = scale(img, 100);
-                ImageIcon icon = new ImageIcon(img);
-
-                JLabel imageLabel = new JLabel();
-                int finalI = i;
-                File imageFile = filesArr[i];
-                imageLabel.addMouseListener(new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent mouseEvent) {
-                        if(mouseEvent.getButton() == MouseEvent.BUTTON1){
-                            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                                    new ImageTransferable(imageFile), null);
-                        }
-                        if(mouseEvent.getButton() == MouseEvent.BUTTON3){
-                            JPopupMenu imageSettingsMenu = new JPopupMenu();
-
-                            JMenuItem deleteImage = new JMenuItem("Delete");
-                            deleteImage.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent actionEvent) {
-                                    imageFile.delete();
-                                    JOptionPane.showMessageDialog(imageLabel, "Image successful delete", "Delete image", JOptionPane.INFORMATION_MESSAGE);
-                                    showAllImages();
-                                }
-                            });
-                            imageSettingsMenu.add(deleteImage);
-
-                            JMenuItem tagsImage = new JMenuItem("Tags");
-                            tagsImage.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent actionEvent) {
-                                    TagsFrame tagsFrame = new TagsFrame(imageFile);
-                                    tagsFrame.setBounds(imageLabel.getBounds().x, imageLabel.getBounds().y, 400, 400);
-                                }
-                            });
-                            imageSettingsMenu.add(tagsImage);
-
-                            JMenuItem infoImage = new JMenuItem("Info");
-                            infoImage.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent actionEvent) {
-                                    JOptionPane.showMessageDialog(imageLabel,  "Name " + imageFile.getName() + "\n" +
-                                                                                        "Path " + imageFile.getAbsolutePath() + "\n" +
-                                                                                        "Size " + (float)(imageFile.length()/1024) + " KB");
-                                }
-                            });
-                            imageSettingsMenu.add(infoImage);
-
-                            imageSettingsMenu.show(imageLabel,0, 50);
-                        }
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent mouseEvent) {
-
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent mouseEvent) {
-
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent mouseEvent) {
-
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent mouseEvent) {
-
-                    }
-                });
-                imageLabel.setIcon(icon);
-                mainPanel.add(imageLabel);
-
+                ImageLabel imageLabel = new ImageLabel(files[i], contentPanel);
+                mainPanel.add(contentPanel);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -319,109 +237,69 @@ public class MemeStorage extends JFrame {
     void showTagImages(){
         mainPanel.removeAll();
 
-        String[] tagsFile = new File("storage/tags/").list();
+        mainPanel.setLayout(new BorderLayout());
+
+        JPanel contentPanel = new JPanel(new GridLayout(0,5));
+        File[] filesArr = new File("storage/tags/").listFiles();
+
+        Arrays.sort(filesArr, (f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
+
+        String[] tagsFile = new String[filesArr.length];
+        for(int i = 0; i < tagsFile.length; i++)
+            tagsFile[i] = filesArr[i].getName();
+
         if(tagsFile.length > 0){
             JList<String> tagsList = new JList<>(tagsFile);
-            tagsList.addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent listSelectionEvent) {
-                    try {
-                        mainPanel.removeAll();
-                        mainPanel.add(tagsList);
-                        mainPanel.revalidate();
 
-                        BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
+            JScrollPane tagsScrollPane = new JScrollPane(tagsList);
+            tagsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            tagsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            tagsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            File image = new File("storage/images/" + line);
+            JScrollPane contentScrollPane = new JScrollPane(contentPanel);
+            contentScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-                            BufferedImage img = ImageIO.read(image);
-                            img = scale(img, 100);
-                            ImageIcon icon = new ImageIcon(img);
+            mainPanel.add(tagsScrollPane, BorderLayout.WEST);
+            mainPanel.add(contentScrollPane, BorderLayout.CENTER);
 
-                            JLabel imageLabel = new JLabel();
-                            imageLabel.addMouseListener(new MouseListener() {
-                                @Override
-                                public void mouseClicked(MouseEvent mouseEvent) {
-                                    if(mouseEvent.getButton() == MouseEvent.BUTTON1){
-                                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                                                new ImageTransferable(image), null);
-                                    }
-                                    if(mouseEvent.getButton() == MouseEvent.BUTTON3){
-                                        JPopupMenu imageSettingsMenu = new JPopupMenu();
+            tagsList.addListSelectionListener(listSelectionEvent -> {
+                try {
+                    contentPanel.removeAll();
+                    contentPanel.revalidate();
 
-                                        JMenuItem deleteImage = new JMenuItem("Delete");
-                                        deleteImage.addActionListener(new ActionListener() {
-                                            @Override
-                                            public void actionPerformed(ActionEvent actionEvent) {
-                                                image.delete();
-                                                JOptionPane.showMessageDialog(imageLabel, "Image successful delete", "Delete image", JOptionPane.INFORMATION_MESSAGE);
-                                                showAllImages();
-                                            }
-                                        });
-                                        imageSettingsMenu.add(deleteImage);
+                    BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
 
-                                        JMenuItem tagsImage = new JMenuItem("Tags");
-                                        tagsImage.addActionListener(new ActionListener() {
-                                            @Override
-                                            public void actionPerformed(ActionEvent actionEvent) {
-                                                TagsFrame tagsFrame = new TagsFrame(image);
-                                                tagsFrame.setBounds(imageLabel.getBounds().x, imageLabel.getBounds().y, 400, 400);
-                                            }
-                                        });
-                                        imageSettingsMenu.add(tagsImage);
+                    ArrayList<File> tagedImage = new ArrayList<>();
 
-                                        JMenuItem infoImage = new JMenuItem("Info");
-                                        infoImage.addActionListener(new ActionListener() {
-                                            @Override
-                                            public void actionPerformed(ActionEvent actionEvent) {
-                                                JOptionPane.showMessageDialog(imageLabel,  "Name " + image.getName() + "\n" +
-                                                        "Path " + image.getAbsolutePath() + "\n" +
-                                                        "Size " + (float)(image.length()/1024) + " KB");
-                                            }
-                                        });
-                                        imageSettingsMenu.add(infoImage);
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        File image = new File("storage/images/" + line);
+                        tagedImage.add(image);
+                    }
 
-                                        imageSettingsMenu.show(imageLabel,0, 50);
-                                    }
-                                }
+                    tagedImage.sort((f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
 
-                                @Override
-                                public void mousePressed(MouseEvent mouseEvent) {}
+                    for(int i = 0; i < tagedImage.size(); i++) {
+                        File image = tagedImage.get(i);
+                        ImageLabel imageLabel = new ImageLabel(image, contentPanel);
+                    }
 
-                                @Override
-                                public void mouseReleased(MouseEvent mouseEvent) {}
-
-                                @Override
-                                public void mouseEntered(MouseEvent mouseEvent) {}
-
-                                @Override
-                                public void mouseExited(MouseEvent mouseEvent) {}
-                            });
-                            imageLabel.setIcon(icon);
-                            mainPanel.add(imageLabel);
-                        }
-                        mainPanel.revalidate();
-                        mainPanel.repaint();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    contentPanel.revalidate();
+                    contentPanel.repaint();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    int confirmDelete = JOptionPane.showConfirmDialog(null, "This tag is empty or damaged. Delete this?", "Tag is empty", JOptionPane.YES_NO_OPTION);
+                    if(confirmDelete == JOptionPane.YES_OPTION){
+                        new File("storage/tags/" + tagsList.getSelectedValue()).delete();
                     }
                 }
             });
-            mainPanel.add(new JScrollPane(tagsList));
             revalidate();
         }
-    }
-
-    void showSearchTagImages(){
-        mainPanel.removeAll();
-
-        JTextArea searchArea = new JTextArea();
-
-        revalidate();
     }
 
     String generateName(){
@@ -445,82 +323,7 @@ public class MemeStorage extends JFrame {
         return name;
     }
 
-    BufferedImage scale(BufferedImage img, int minSize) {
-        int targetWidth = 0;
-        int targetHeight = 0;
-
-        if(img.getHeight() <= minSize && img.getWidth() <= minSize){
-            return img;
-        }else{
-            if(img.getWidth() > img.getHeight()){
-                float scaleKoef = img.getWidth()/minSize;
-
-                targetWidth = (int) (img.getWidth()/scaleKoef);
-                targetHeight = (int) (img.getHeight()/scaleKoef);
-            }else{
-                float scaleKoef = img.getHeight()/minSize;
-
-                targetWidth = (int) (img.getWidth()/scaleKoef);
-                targetHeight = (int) (img.getHeight()/scaleKoef);
-            }
-
-        }
-
-
-        int type = (img.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
-        BufferedImage ret = img;
-        BufferedImage scratchImage = null;
-        Graphics2D g2 = null;
-
-        int w = img.getWidth();
-        int h = img.getHeight();
-
-        int prevW = w;
-        int prevH = h;
-
-        do {
-            if (w > targetWidth) {
-                w /= 2;
-                w = (w < targetWidth) ? targetWidth : w;
-            }
-
-            if (h > targetHeight) {
-                h /= 2;
-                h = (h < targetHeight) ? targetHeight : h;
-            }
-
-            if (scratchImage == null) {
-                scratchImage = new BufferedImage(w, h, type);
-                g2 = scratchImage.createGraphics();
-            }
-
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.drawImage(ret, 0, 0, w, h, 0, 0, prevW, prevH, null);
-
-            prevW = w;
-            prevH = h;
-            ret = scratchImage;
-        } while (w != targetWidth || h != targetHeight);
-
-        if (g2 != null) {
-            g2.dispose();
-        }
-
-        if (targetWidth != ret.getWidth() || targetHeight != ret.getHeight()) {
-            scratchImage = new BufferedImage(targetWidth, targetHeight, type);
-            g2 = scratchImage.createGraphics();
-            g2.drawImage(ret, 0, 0, null);
-            g2.dispose();
-            ret = scratchImage;
-        }
-
-
-        return ret;
-
-    }
-
-    void checkFiles() throws IOException {
+    void checkFiles() {
         if(!new File("storage/").exists())
             new File("storage/").mkdir();
 
