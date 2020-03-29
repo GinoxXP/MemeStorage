@@ -1,7 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -24,7 +23,7 @@ public class MemeStorage extends JFrame {
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.4";
+    final String VERSION = "0.5";
 
     public MemeStorage() {
         setTitle(programName);
@@ -46,7 +45,7 @@ public class MemeStorage extends JFrame {
 
         add(scrollPane);
 
-        setSize(700,450);
+        setSize(750,450);
         setVisible(true);
 
         setTrayIcon();
@@ -249,7 +248,7 @@ public class MemeStorage extends JFrame {
             tagsFile[i] = filesArr[i].getName();
 
         if(tagsFile.length > 0){
-            JList<String> tagsList = new JList<>(tagsFile);
+            JList<String> tagsList = new JList<>();
 
             JScrollPane tagsScrollPane = new JScrollPane(tagsList);
             tagsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -260,6 +259,18 @@ public class MemeStorage extends JFrame {
             contentScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+            JTextField searchField = new JTextField();
+            searchField.addCaretListener(caretEvent -> {
+                ArrayList<String> searchedTags = new ArrayList<>();
+                for(int i = 0; i < tagsFile.length; i++)
+                    if(tagsFile[i].contains(searchField.getText()))
+                        searchedTags.add(tagsFile[i]);
+
+                tagsList.setListData(searchedTags.toArray(String[]::new));
+            });
+
+            mainPanel.add(searchField, BorderLayout.NORTH);
 
             mainPanel.add(tagsScrollPane, BorderLayout.WEST);
             mainPanel.add(contentScrollPane, BorderLayout.CENTER);
