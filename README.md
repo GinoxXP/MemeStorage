@@ -15,11 +15,14 @@ MemeStorage gives the user the opportunity to offer tags - words
 or even whole phrases. Thanks to the tags, the user can easily find the desired picture.
 ![Camera sevtors](tags.png)
 
+### Language packages
+MemeStorage supports custom language packs. At the moment, MemeStorage has only 2 language packs (English and Russian), but you can help by adding your own.
+![Creating language package](localizations/README.md)
+
 ### Future updates
 Future updates to MemeStorage will add:
 - Create your own collection;
 - Hot keys for faster user interaction;
-- Create your own language packs.
 
 ### Build
 ```
@@ -48,11 +51,14 @@ MemeStorage предоставляет пользователю возможно
 или даже целые фразы. Благодаря тегам пользователь может легко найти нужную картинку.
 ![Camera sevtors](tags.png)
 
+### Языковые пакеты
+MemeStorage поддерживает пользовательские языковые пакеты. На данный момент в MemeStorage присутствуют только 2 языковых пакетов (русский и английский), но вы можете помочь, добавив свой.
+![Создание языкового пакета](localizations/README.md)
+
 ### Будущие обновления
 В будущих обновлениях MemeStorage добавятся:
 - Создание своих коллекций;
 - Горячие клавиши для более быстрого взаимодействия с пользователем;
-- Создание своих языковых пакетов.
 
 ### Сборка
 ```
