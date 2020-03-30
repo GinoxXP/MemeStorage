@@ -1,0 +1,26 @@
+<Elements>
+    <LocalizationName>Русский</LocalizationName>
+    
+    <Title>MemeStorage</Title>
+    <MenuShow>Показать</MenuShow>
+    <ButtonShowAll>Показать все</ButtonShowAll>
+    <ButtonShowTagImages>Показать изображения по тегам</ButtonShowTagImages>
+    <ButtonAddImage>Добавить изображение из буфера обмена</ButtonAddImage>
+    <MenuProperties>Свойства</MenuProperties>
+    <ButtonSettings>Настройки</ButtonSettings>
+    <ButtonInfo>Информация</ButtonInfo>
+    <LabelDefaultFormat>Стандартный формат сохранения изображений</LabelDefaultFormat>
+    <LabelLocalization>Язык</LabelLocalization>
+    <LinkGitHub>Открыть на GitHub</LinkGitHub>
+    
+    <!--Exceptions and errors messages-->
+    <MessageIconCantLoad>Иконку не удалось загрузить</MessageIconCantLoad>
+    <MessageTagEmptyOrDamaged>Этот тег пуст или поврежден. Удалить его?</MessageTagEmptyOrDamaged>
+    <MessageTitleTagIsEmpty>Тег пуст</MessageTitleTagIsEmpty>
+    
+    <!--Tray menu-->
+    <TrayMenuButtonClose>Закрыть</TrayMenuButtonClose>
+    
+    <!--Info about localization autor-->
+    <LocalizationAuthor>GinoxXP</LocalizationAuthor>
+</Elements> 

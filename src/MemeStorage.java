@@ -19,20 +19,28 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class MemeStorage extends JFrame {
-    final String programName = "MemeStorage";
+    Localization localization;
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.5";
+    final String VERSION = "0.6";
 
     public MemeStorage() {
-        setTitle(programName);
+        localization = new Localization("localizations/eng.xml");
+        buildUI();
+
+        revalidate();
+        repaint();
+    }
+
+    void buildUI(){
+        setTitle(localization.getTitle());
 
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         try {
             setIconImage(ImageIO.read(new File("files/icon32.png")));
         } catch (IOException e) {
-            System.err.println("Icon can't load");
+            System.err.println(localization.getMessageIconCantLoad());
             e.printStackTrace();
         }
 
@@ -48,15 +56,13 @@ public class MemeStorage extends JFrame {
         setSize(750,450);
         setVisible(true);
 
-        setTrayIcon();
-
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
-        JMenu showMenu = new JMenu("Show");
+        JMenu showMenu = new JMenu(localization.getMenuShow());
         menuBar.add(showMenu);
 
-        JMenuItem showAllItem = new JMenuItem("Show all");
+        JMenuItem showAllItem = new JMenuItem(localization.getButtonShowAll());
         showAllItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -65,7 +71,7 @@ public class MemeStorage extends JFrame {
         });
         showMenu.add(showAllItem);
 
-        JMenuItem showTagImageItem = new JMenuItem("Show tag image");
+        JMenuItem showTagImageItem = new JMenuItem(localization.getButtonShowTagImages());
         showTagImageItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -74,7 +80,7 @@ public class MemeStorage extends JFrame {
         });
         showMenu.add(showTagImageItem);
 
-        JMenuItem addImageFromClipboard = new JMenuItem("Add image from clipboard");
+        JMenuItem addImageFromClipboard = new JMenuItem(localization.getButtonAddImage());
         addImageFromClipboard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -93,10 +99,10 @@ public class MemeStorage extends JFrame {
         });
         menuBar.add(addImageFromClipboard);
 
-        JMenu propertiesMenu = new JMenu("Properties");
+        JMenu propertiesMenu = new JMenu(localization.getMenuProperties());
         menuBar.add(propertiesMenu);
 
-        JMenuItem settings = new JMenuItem("Settings");
+        JMenuItem settings = new JMenuItem(localization.getButtonSettings());
         settings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -105,7 +111,7 @@ public class MemeStorage extends JFrame {
         });
         propertiesMenu.add(settings);
 
-        JMenuItem info = new JMenuItem("Info");
+        JMenuItem info = new JMenuItem(localization.getButtonInfo());
         info.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -114,29 +120,29 @@ public class MemeStorage extends JFrame {
         });
         propertiesMenu.add(info);
 
+        for(int i = 0; i < SystemTray.getSystemTray().getTrayIcons().length; i++)
+            SystemTray.getSystemTray().remove(SystemTray.getSystemTray().getTrayIcons()[i]);
+        setTrayIcon();
+
         checkFiles();
 
         showAllImages();
-
-
-        revalidate();
-        repaint();
     }
 
     void showSettings(){
-        JFrame settingsFrame = new JFrame("Settings");
+        JFrame settingsFrame = new JFrame(localization.getButtonSettings());
         settingsFrame.setVisible(true);
         settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         settingsFrame.setSize(400,200);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new FlowLayout());
+        mainPanel.setLayout(new GridLayout(0,2,100,100));
         settingsFrame.add(mainPanel);
 
-        JLabel formatLabel = new JLabel("Default save images format");
+        JLabel formatLabel = new JLabel(localization.getLabelDefaultFormat());
         mainPanel.add(formatLabel);
 
-        String imageFormats[] = {"png", "jpg", "memes"};
+        String imageFormats[] = {"png", "jpg"};
         JComboBox changeImageFormats = new JComboBox(imageFormats);
 
         for(int i = 0; i < imageFormats.length; i++){
@@ -152,11 +158,33 @@ public class MemeStorage extends JFrame {
         });
         mainPanel.add(changeImageFormats);
 
+        JLabel localizationLabel = new JLabel(localization.getLabelLocalization());
+        mainPanel.add(localizationLabel);
+
+        File[] localizationFiles = new File("localizations/").listFiles(file -> file.getName().contains(".xml"));
+        String[] localizations = new String[localizationFiles.length];
+        for(int i = 0; i < localizations.length; i++){
+            localizations[i] = new Localization("localizations/" + localizationFiles[i].getName()).getLocalizationName();
+        }
+        JComboBox changeLocalization = new JComboBox(localizations);
+
+
+        for(int i = 0; i < localizationFiles.length; i++){
+            if(localizations[i].equals(localization.getLocalizationName()))
+                changeLocalization.setSelectedItem(localizations[i]);
+        }
+        changeLocalization.addActionListener(actionEvent -> {
+            localization = new Localization(localizationFiles[changeLocalization.getSelectedIndex()].getAbsolutePath());
+            settingsFrame.dispose();
+            buildUI();
+        });
+        mainPanel.add(changeLocalization);
+
         settingsFrame.revalidate();
     }
 
     void showInfo(){
-        JFrame infoFrame = new JFrame("Info");
+        JFrame infoFrame = new JFrame(localization.getButtonInfo());
         infoFrame.setVisible(true);
         infoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         infoFrame.setSize(100,200);
@@ -165,13 +193,13 @@ public class MemeStorage extends JFrame {
         mainPanel.setLayout(new GridLayout(0,1));
         infoFrame.add(mainPanel);
 
-        JLabel nameLabel = new JLabel("MemeStorage");
+        JLabel nameLabel = new JLabel(localization.getTitle());
         mainPanel.add(nameLabel);
 
         JLabel authorLabel = new JLabel("GinoxXP, 2020");
         mainPanel.add(authorLabel);
 
-        JLabel linkLabel = new JLabel("<html><u><font color=BLUE>Open on GitHub");
+        JLabel linkLabel = new JLabel("<html><u><font color=BLUE>" + localization.getLinkGitHub());
         linkLabel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -268,6 +296,9 @@ public class MemeStorage extends JFrame {
                         searchedTags.add(tagsFile[i]);
 
                 tagsList.setListData(searchedTags.toArray(String[]::new));
+                
+                revalidate();
+                repaint();
             });
 
             mainPanel.add(searchField, BorderLayout.NORTH);
@@ -303,7 +334,7 @@ public class MemeStorage extends JFrame {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                    int confirmDelete = JOptionPane.showConfirmDialog(null, "This tag is empty or damaged. Delete this?", "Tag is empty", JOptionPane.YES_NO_OPTION);
+                    int confirmDelete = JOptionPane.showConfirmDialog(null, localization.getMessageTagEmptyOrDamaged(), localization.getMessageTitleTagIsEmpty(), JOptionPane.YES_NO_OPTION);
                     if(confirmDelete == JOptionPane.YES_OPTION){
                         new File("storage/tags/" + tagsList.getSelectedValue()).delete();
                     }
@@ -349,10 +380,9 @@ public class MemeStorage extends JFrame {
         if(!SystemTray.isSupported())
             return;
 
-
         PopupMenu trayMenu = new PopupMenu();
 
-        MenuItem menuItemClose = new MenuItem("Close");
+        MenuItem menuItemClose = new MenuItem(localization.getTrayMenuButtonClose());
         menuItemClose.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -366,10 +396,10 @@ public class MemeStorage extends JFrame {
         try {
             icon = ImageIO.read(new File("files/icon32.png"));
         } catch (IOException e) {
-            System.err.println("Icon can't load");
+            System.err.println(localization.getMessageIconCantLoad());
             e.printStackTrace();
         }
-        TrayIcon trayIcon = new TrayIcon(icon, programName, trayMenu);
+        TrayIcon trayIcon = new TrayIcon(icon, localization.getTitle(), trayMenu);
         trayIcon.setImageAutoSize(true);
         trayIcon.addActionListener(new ActionListener() {
             @Override

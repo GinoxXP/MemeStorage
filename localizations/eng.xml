@@ -1,0 +1,26 @@
+<Elements>
+    <LocalizationName>English</LocalizationName>
+    
+    <Title>MemeStorage</Title>
+    <MenuShow>Show</MenuShow>
+    <ButtonShowAll>Show all</ButtonShowAll>
+    <ButtonShowTagImages>Show tag images</ButtonShowTagImages>
+    <ButtonAddImage>Add image from clipboard</ButtonAddImage>
+    <MenuProperties>Properties</MenuProperties>
+    <ButtonSettings>Settings</ButtonSettings>
+    <ButtonInfo>Info</ButtonInfo>
+    <LabelDefaultFormat>Default save images format</LabelDefaultFormat>
+    <LabelLocalization>Language</LabelLocalization>
+    <LinkGitHub>Open on GitHub</LinkGitHub>
+    
+    <!--Exceptions and errors messages-->
+    <MessageIconCantLoad>Icon can't load</MessageIconCantLoad>
+    <MessageTagEmptyOrDamaged>This tag is empty or damaged. Delete this?</MessageTagEmptyOrDamaged>
+    <MessageTitleTagIsEmpty>Tag is empty</MessageTitleTagIsEmpty>
+    
+    <!--Tray menu-->
+    <TrayMenuButtonClose>Close</TrayMenuButtonClose>
+    
+    <!--Info about localization autor-->
+    <LocalizationAuthor>GinoxXP</LocalizationAuthor>
+</Elements>
