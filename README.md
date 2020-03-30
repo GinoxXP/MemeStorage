@@ -17,6 +17,7 @@ or even whole phrases. Thanks to the tags, the user can easily find the desired 
 
 ### Language packages
 MemeStorage supports custom language packs. At the moment, MemeStorage has only 2 language packs (English and Russian), but you can help by adding your own.
+
 ![Creating language package](localizations/README.md)
 
 ### Future updates
@@ -53,6 +54,7 @@ MemeStorage предоставляет пользователю возможно
 
 ### Языковые пакеты
 MemeStorage поддерживает пользовательские языковые пакеты. На данный момент в MemeStorage присутствуют только 2 языковых пакетов (русский и английский), но вы можете помочь, добавив свой.
+
 ![Создание языкового пакета](localizations/README.md)
 
 ### Будущие обновления
