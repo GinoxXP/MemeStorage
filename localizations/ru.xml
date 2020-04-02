@@ -13,10 +13,16 @@
     <LabelLocalization>Язык</LabelLocalization>
     <LinkGitHub>Открыть на GitHub</LinkGitHub>
     
+    
     <!--Exceptions and errors messages-->
     <MessageIconCantLoad>Иконку не удалось загрузить</MessageIconCantLoad>
+    
     <MessageTagEmptyOrDamaged>Этот тег пуст или поврежден. Удалить его?</MessageTagEmptyOrDamaged>
     <MessageTitleTagIsEmpty>Тег пуст</MessageTitleTagIsEmpty>
+    
+    <MessageClipboardEmpty>Буфер обмена не содержит изображения</MessageClipboardEmpty>
+    <MessageTitleClipboardEmpty>Изображение не найдено</MessageTitleClipboardEmpty>
+    
     
     <!--Tray menu-->
     <TrayMenuButtonClose>Закрыть</TrayMenuButtonClose>

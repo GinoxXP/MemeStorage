@@ -13,10 +13,16 @@
     <LabelLocalization>Language</LabelLocalization>
     <LinkGitHub>Open on GitHub</LinkGitHub>
     
+    
     <!--Exceptions and errors messages-->
     <MessageIconCantLoad>Icon can't load</MessageIconCantLoad>
+    
     <MessageTagEmptyOrDamaged>This tag is empty or damaged. Delete this?</MessageTagEmptyOrDamaged>
     <MessageTitleTagIsEmpty>Tag is empty</MessageTitleTagIsEmpty>
+    
+    <MessageClipboardEmpty>Clipboard not contain image</MessageClipboardEmpty>
+    <MessageTitleClipboardEmpty>Image not founded</MessageTitleClipboardEmpty>
+    
     
     <!--Tray menu-->
     <TrayMenuButtonClose>Close</TrayMenuButtonClose>

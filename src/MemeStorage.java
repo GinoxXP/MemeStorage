@@ -5,10 +5,7 @@ import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
@@ -23,7 +20,7 @@ public class MemeStorage extends JFrame {
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     String defaultImagesFormat = "png";
-    final String VERSION = "0.6";
+    final String VERSION = "0.7";
 
     public MemeStorage() {
         localization = new Localization("localizations/eng.xml");
@@ -40,10 +37,22 @@ public class MemeStorage extends JFrame {
         try {
             setIconImage(ImageIO.read(new File("files/icon32.png")));
         } catch (IOException e) {
-            System.err.println(localization.getMessageIconCantLoad());
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                                                        localization.getMessageIconCantLoad(),
+                                                        localization.getMessageIconCantLoad(),
+                                                        JOptionPane.ERROR_MESSAGE);
         }
 
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_V && e.isControlDown())
+                    addImageFromClipboard();
+
+                if(e.getKeyCode() == KeyEvent.VK_X && e.isControlDown())
+                    setVisible(false);
+            }
+        });
         mainPanel = new JPanel();
 
         scrollPane = new JScrollPane(mainPanel);
@@ -63,61 +72,26 @@ public class MemeStorage extends JFrame {
         menuBar.add(showMenu);
 
         JMenuItem showAllItem = new JMenuItem(localization.getButtonShowAll());
-        showAllItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                showAllImages();
-            }
-        });
+        showAllItem.addActionListener(actionEvent -> showAllImages());
         showMenu.add(showAllItem);
 
         JMenuItem showTagImageItem = new JMenuItem(localization.getButtonShowTagImages());
-        showTagImageItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                showTagImages();
-            }
-        });
+        showTagImageItem.addActionListener(actionEvent -> showTagImages());
         showMenu.add(showTagImageItem);
 
         JMenuItem addImageFromClipboard = new JMenuItem(localization.getButtonAddImage());
-        addImageFromClipboard.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Transferable transferableImg = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-
-                try {
-                    Image image = (Image) transferableImg.getTransferData(DataFlavor.imageFlavor);
-                    ImageIO.write((BufferedImage)image, defaultImagesFormat, new File("storage/images/" + generateName()));
-                    showAllImages();
-                } catch (UnsupportedFlavorException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        addImageFromClipboard.addActionListener(actionEvent -> addImageFromClipboard());
         menuBar.add(addImageFromClipboard);
 
         JMenu propertiesMenu = new JMenu(localization.getMenuProperties());
         menuBar.add(propertiesMenu);
 
         JMenuItem settings = new JMenuItem(localization.getButtonSettings());
-        settings.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                showSettings();
-            }
-        });
+        settings.addActionListener(actionEvent -> showSettings());
         propertiesMenu.add(settings);
 
         JMenuItem info = new JMenuItem(localization.getButtonInfo());
-        info.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                showInfo();
-            }
-        });
+        info.addActionListener(actionEvent -> showInfo());
         propertiesMenu.add(info);
 
         for(int i = 0; i < SystemTray.getSystemTray().getTrayIcons().length; i++)
@@ -127,6 +101,25 @@ public class MemeStorage extends JFrame {
         checkFiles();
 
         showAllImages();
+    }
+
+    void addImageFromClipboard(){
+        Transferable transferableImg = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+
+        try {
+            Image image = (Image) transferableImg.getTransferData(DataFlavor.imageFlavor);
+            ImageIO.write((BufferedImage)image,
+                    defaultImagesFormat,
+                    new File("storage/images/" + generateName()));
+            showAllImages();
+        } catch (UnsupportedFlavorException e) {
+            JOptionPane.showMessageDialog(null,
+                    localization.getMessageClipboardEmpty(),
+                    localization.getMessageTitleClipboardEmpty(),
+                    JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     void showSettings(){
@@ -288,6 +281,14 @@ public class MemeStorage extends JFrame {
             contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
+
+            ArrayList<String> allTags = new ArrayList<>();                                                              ///
+            for(int i = 0; i < tagsFile.length; i++)                                                                    /// Feeling list
+            allTags.add(tagsFile[i]);                                                                                   ///
+                                                                                                                        ///
+            tagsList.setListData(allTags.toArray(String[]::new));                                                       ///
+
+
             JTextField searchField = new JTextField();
             searchField.addCaretListener(caretEvent -> {
                 ArrayList<String> searchedTags = new ArrayList<>();
@@ -331,10 +332,13 @@ public class MemeStorage extends JFrame {
                     contentPanel.revalidate();
                     contentPanel.repaint();
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                //e.printStackTrace();                                                                                  // It's OK
                 } catch (IOException e) {
                     e.printStackTrace();
-                    int confirmDelete = JOptionPane.showConfirmDialog(null, localization.getMessageTagEmptyOrDamaged(), localization.getMessageTitleTagIsEmpty(), JOptionPane.YES_NO_OPTION);
+                    int confirmDelete = JOptionPane.showConfirmDialog(null,
+                                                                    localization.getMessageTagEmptyOrDamaged(),
+                                                                    localization.getMessageTitleTagIsEmpty(),
+                                                                    JOptionPane.YES_NO_OPTION);
                     if(confirmDelete == JOptionPane.YES_OPTION){
                         new File("storage/tags/" + tagsList.getSelectedValue()).delete();
                     }
@@ -349,10 +353,12 @@ public class MemeStorage extends JFrame {
         do{
             name = "img-";
 
-            String[] letters = {"Q", "q", "W", "w", "E", "e", "R", "r", "T", "t", "Y", "y", "U", "u", "I", "i", "O", "o", "P", "p",
+            String[] letters = {
+                    "Q", "q", "W", "w", "E", "e", "R", "r", "T", "t", "Y", "y", "U", "u", "I", "i", "O", "o", "P", "p",
                     "A", "a", "S", "s", "D", "d", "F", "f", "G", "g", "H", "h", "J", "j", "K", "k", "L", "l",
                     "Z", "z", "X", "x", "C", "c", "V", "v", "B", "b", "N", "n", "M", "m",
-                    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
+                    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
+                    };
 
             for(int i = 0 ; i < 16; i++){
                 name += letters[new Random().nextInt(letters.length)];

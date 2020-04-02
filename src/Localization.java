@@ -27,6 +27,8 @@ public class Localization {
     private String MessageIconCantLoad;
     private String MessageTagEmptyOrDamaged;
     private String MessageTitleTagIsEmpty;
+    private String MessageClipboardEmpty;
+    private String MessageTitleClipboardEmpty;
 
     private String TrayMenuButtonClose;
 
@@ -55,9 +57,13 @@ public class Localization {
                         case "LabelLocalization":LabelLocalization = content;break;
                         case "LinkGitHub":LinkGitHub = content;break;
                         case "LocalizationAuthor":LocalizationAuthor = content;break;
+
                         case "MessageIconCantLoad":MessageIconCantLoad = content;break;
                         case "MessageTagEmptyOrDamaged":MessageTagEmptyOrDamaged = content;break;
                         case "MessageTitleTagIsEmpty":MessageTitleTagIsEmpty = content;break;
+                        case "MessageClipboardEmpty":MessageClipboardEmpty = content;break;
+                        case "MessageTitleClipboardEmpty":MessageTitleClipboardEmpty = content;break;
+
                         case "TrayMenuButtonClose":TrayMenuButtonClose = content;break;
                     }
                 }
@@ -137,5 +143,13 @@ public class Localization {
 
     public String getLocalizationName() {
         return LocalizationName;
+    }
+
+    public String getMessageClipboardEmpty() {
+        return MessageClipboardEmpty;
+    }
+
+    public String getMessageTitleClipboardEmpty() {
+        return MessageTitleClipboardEmpty;
     }
 }
