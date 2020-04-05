@@ -23,6 +23,9 @@ out/
 #Collection
 storage/
 
+#Settings
+.setting
+
 #Shell script
 MemeStorage.sh
 

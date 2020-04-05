@@ -30,6 +30,7 @@ Future updates to MemeStorage will add:
 javac -sourcepath ./src -d out/production/MemeStorage src/MemeStorage.java
 jar -cmf manifest.mf MemeStorage.jar -C out/production/MemeStorage .
 ```
+Or run build scritpt (build.sh / build.bat)
 
 ### Run
 ```
@@ -37,6 +38,10 @@ java -jar MemeStorage.jar
 ```
 Or double click on .jar file.
 
+### Hot keys
+- Ctrl + V - add image frome clipboard
+- Ctrl + X - hide window
+- Ctrl + Q - exit
 
 ## [Ru]
 ### Что это?
@@ -67,9 +72,15 @@ MemeStorage поддерживает пользовательские языко
 javac -sourcepath ./src -d out/production/MemeStorage src/MemeStorage.java
 jar -cmf manifest.mf MemeStorage.jar -C out/production/MemeStorage .
 ```
+Или запустить скрипт сборки (build.sh / build.bat)
 
 ### Запуск
 ```
 java -jar MemeStorage.jar
 ```
 Или двойной клик по .jar файлу.
+
+### Горячие клавиши
+- Ctrl + V - добавить изображение из буфера обмена
+- Ctrl + X - скрыть окно
+- Ctrl + Q - закрыть MemeStorage

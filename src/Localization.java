@@ -6,6 +6,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 
 public class Localization {
@@ -33,6 +34,9 @@ public class Localization {
     private String TrayMenuButtonClose;
 
     public Localization(String localization){
+        if(!new File(localization).exists())
+            localization = "localizations/eng.xml";
+
         try {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = documentBuilder.parse(localization);
