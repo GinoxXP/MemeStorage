@@ -20,10 +20,6 @@ MemeStorage supports custom language packs. At the moment, MemeStorage has only 
 
 ![Creating language package](localizations/README.md)
 
-### Future updates
-Future updates to MemeStorage will add:
-- Create your own collection;
-- Hot keys for faster user interaction;
 
 ### Build
 ```
@@ -62,10 +58,6 @@ MemeStorage поддерживает пользовательские языко
 
 ![Создание языкового пакета](localizations/README.md)
 
-### Будущие обновления
-В будущих обновлениях MemeStorage добавятся:
-- Создание своих коллекций;
-- Горячие клавиши для более быстрого взаимодействия с пользователем;
 
 ### Сборка
 ```

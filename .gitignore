@@ -24,7 +24,7 @@ out/
 storage/
 
 #Settings
-.setting
+.settings
 
 #Shell script
 MemeStorage.sh
