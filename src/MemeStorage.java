@@ -22,7 +22,7 @@ public class MemeStorage extends JFrame {
     JPanel mainPanel = null;
     JScrollPane scrollPane = null;
     Settings settings = null;
-    final String VERSION = "0.9";
+    final String VERSION = "0.9.5";
 
     public MemeStorage() {
         settings = new Settings();
@@ -240,7 +240,7 @@ public class MemeStorage extends JFrame {
         infoFrame.revalidate();
     }
 
-    void showAllImages(){
+    public void showAllImages(){
         mainPanel.removeAll();
 
         JPanel contentPanel = new JPanel(new GridLayout(0,5));
@@ -251,7 +251,7 @@ public class MemeStorage extends JFrame {
         for(int i = 0; i < files.length; i++)
         {
             try {
-                ImageLabel imageLabel = new ImageLabel(files[i], contentPanel);
+                ImageLabel imageLabel = new ImageLabel(files[i], contentPanel, this);
                 mainPanel.add(contentPanel);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -333,7 +333,7 @@ public class MemeStorage extends JFrame {
 
                     for(int i = 0; i < tagedImage.size(); i++) {
                         File image = tagedImage.get(i);
-                        ImageLabel imageLabel = new ImageLabel(image, contentPanel);
+                        ImageLabel imageLabel = new ImageLabel(image, contentPanel, this);
                     }
 
                     contentPanel.revalidate();
