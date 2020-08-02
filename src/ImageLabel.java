@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class ImageLabel extends JLabel {
-    public ImageLabel(File image, JPanel contentPanel, MemeStorage frame) throws IOException {
+    public ImageLabel(File image, JPanel contentPanel, MainFrame frame) throws IOException {
         BufferedImage img = ImageIO.read(image);
         img = scale(img, 90);
         ImageIcon icon = new ImageIcon(img);
@@ -31,7 +31,7 @@ public class ImageLabel extends JLabel {
                         image.delete();
                         JOptionPane.showMessageDialog(imageLabel, "Image successful delete", "Delete image", JOptionPane.INFORMATION_MESSAGE);
                         frame.remove(contentPanel);
-                        frame.showAllImages();
+                        new TagsWindow(frame);
                     });
                     imageSettingsMenu.add(deleteImage);
 
@@ -65,7 +65,6 @@ public class ImageLabel extends JLabel {
             public void mouseExited(MouseEvent mouseEvent) {}
         });
         setIcon(icon);
-        contentPanel.add(this);
     }
 
     private BufferedImage scale(BufferedImage img, int minSize) {

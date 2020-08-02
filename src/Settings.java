@@ -1,11 +1,11 @@
 import java.io.*;
 
 public class Settings {
-    public String defaultSaveFormat;
-    public String localizations;
-    File file;
+    public static String defaultSaveFormat;
+    public static String localizations;
+    public static File file;
 
-    public Settings(){
+    public static void load(){
         file = new File(".settings");
         try {
             if(!file.exists()){
@@ -13,7 +13,7 @@ public class Settings {
                 defaultSaveFormat = "png";
                 localizations = "eng.xml";
 
-                setSettings();
+                set();
             }
             else{
                 BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -29,14 +29,13 @@ public class Settings {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public void setSettings(){
+    public static void set(){
         try {
-            File file = new File("..settings");
+            File fileNewSettings = new File("..settings");
 
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileNewSettings));
             writer.write(defaultSaveFormat);
             writer.newLine();
             writer.write(localizations);
@@ -45,8 +44,8 @@ public class Settings {
             writer.flush();
             writer.close();
 
-            this.file.delete();
-            file.renameTo(this.file);
+            file.delete();
+            fileNewSettings.renameTo(file);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -10,30 +10,30 @@ import java.io.File;
 import java.io.IOException;
 
 public class Localization {
-    private String LocalizationName;
+    private static String LocalizationName;
 
-    private String Title;
-    private String MenuShow;
-    private String ButtonShowAll;
-    private String ButtonShowTagImages;
-    private String ButtonAddImage;
-    private String MenuProperties;
-    private String ButtonSettings;
-    private String ButtonInfo;
-    private String LabelDefaultFormat;
-    private String LabelLocalization;
-    private String LinkGitHub;
-    private String LocalizationAuthor;
+    private static String Title;
+    private static String MenuShow;
+    private static String ButtonShowAll;
+    private static String ButtonShowTagImages;
+    private static String ButtonAddImage;
+    private static String MenuProperties;
+    private static String ButtonSettings;
+    private static String ButtonInfo;
+    private static String LabelDefaultFormat;
+    private static String LabelLocalization;
+    private static String LinkGitHub;
+    private static String LocalizationAuthor;
 
-    private String MessageIconCantLoad;
-    private String MessageTagEmptyOrDamaged;
-    private String MessageTitleTagIsEmpty;
-    private String MessageClipboardEmpty;
-    private String MessageTitleClipboardEmpty;
+    private static String MessageIconCantLoad;
+    private static String MessageTagEmptyOrDamaged;
+    private static String MessageTitleTagIsEmpty;
+    private static String MessageClipboardEmpty;
+    private static String MessageTitleClipboardEmpty;
 
-    private String TrayMenuButtonClose;
+    private static String TrayMenuButtonClose;
 
-    public Localization(String localization){
+    public static void load(String localization){
         if(!new File(localization).exists())
             localization = "localizations/eng.xml";
 
@@ -81,79 +81,79 @@ public class Localization {
         }
     }
 
-    public String getTitle() {
+    public static String getTitle() {
         return Title;
     }
 
-    public String getMenuShow() {
+    public static String getMenuShow() {
         return MenuShow;
     }
 
-    public String getButtonShowAll() {
+    public static String getButtonShowAll() {
         return ButtonShowAll;
     }
 
-    public String getButtonShowTagImages() {
+    public static String getButtonShowTagImages() {
         return ButtonShowTagImages;
     }
 
-    public String getButtonAddImage() {
+    public static String getButtonAddImage() {
         return ButtonAddImage;
     }
 
-    public String getMenuProperties() {
+    public static String getMenuProperties() {
         return MenuProperties;
     }
 
-    public String getButtonSettings() {
+    public static String getButtonSettings() {
         return ButtonSettings;
     }
 
-    public String getButtonInfo() {
+    public static String getButtonInfo() {
         return ButtonInfo;
     }
 
-    public String getLabelDefaultFormat() {
+    public static String getLabelDefaultFormat() {
         return LabelDefaultFormat;
     }
 
-    public String getLinkGitHub() {
+    public static String getLinkGitHub() {
         return LinkGitHub;
     }
 
-    public String getLocalizationAuthor() {
+    public static String getLocalizationAuthor() {
         return LocalizationAuthor;
     }
 
-    public String getMessageIconCantLoad() {
+    public static String getMessageIconCantLoad() {
         return MessageIconCantLoad;
     }
 
-    public String getMessageTagEmptyOrDamaged() {
+    public static String getMessageTagEmptyOrDamaged() {
         return MessageTagEmptyOrDamaged;
     }
 
-    public String getMessageTitleTagIsEmpty() {
+    public static String getMessageTitleTagIsEmpty() {
         return MessageTitleTagIsEmpty;
     }
 
-    public String getTrayMenuButtonClose() {
+    public static String getTrayMenuButtonClose() {
         return TrayMenuButtonClose;
     }
 
-    public String getLabelLocalization() {
+    public static String getLabelLocalization() {
         return LabelLocalization;
     }
 
-    public String getLocalizationName() {
+    public static String getLocalizationName() {
         return LocalizationName;
     }
 
-    public String getMessageClipboardEmpty() {
+    public static String getMessageClipboardEmpty() {
         return MessageClipboardEmpty;
     }
 
-    public String getMessageTitleClipboardEmpty() {
+    public static String getMessageTitleClipboardEmpty() {
         return MessageTitleClipboardEmpty;
     }
 }
