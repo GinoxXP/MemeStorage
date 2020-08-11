@@ -12,84 +12,18 @@ public class TagsWindow {
 
     void buildUI(MainFrame mainFrame) {
         mainFrame.mainPanel.removeAll();
-
         mainFrame.mainPanel.setLayout(new BorderLayout());
 
         JPanel contentPanel = new JPanel(new GridLayout(0, 5));
-        File[] filesArr = new File("storage/tags/").listFiles();
 
-        Arrays.sort(filesArr, (f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
-
-        String[] tagsFile = new String[filesArr.length];
-        for (int i = 0; i < tagsFile.length; i++)
-            tagsFile[i] = filesArr[i].getName();
-
-        if (tagsFile.length > 0) {
+        String[] tagsFiles = getTags();
+        if (tagsFiles.length > 0) {
             JList<String> tagsList = new JList<>();
-
-            JScrollPane tagsScrollPane = new JScrollPane(tagsList);
-            tagsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            tagsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            tagsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-            JScrollPane contentScrollPane = new JScrollPane(contentPanel);
-            contentScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-            contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-
-            ArrayList<String> allTags = new ArrayList<>();                                                              ///
-            for (int i = 0; i < tagsFile.length; i++)                                                                    /// Feeling list
-                allTags.add(tagsFile[i]);                                                                                   ///
-            ///
-            tagsList.setListData(allTags.toArray(String[]::new));                                                       ///
-
-
-            JTextField searchField = new JTextField();
-            searchField.addCaretListener(caretEvent -> {
-                ArrayList<String> searchedTags = new ArrayList<>();
-                for (int i = 0; i < tagsFile.length; i++)
-                    if (tagsFile[i].contains(searchField.getText()))
-                        searchedTags.add(tagsFile[i]);
-
-                tagsList.setListData(searchedTags.toArray(String[]::new));
-
-                mainFrame.revalidate();
-                mainFrame.repaint();
-            });
-
-            mainFrame.mainPanel.add(searchField, BorderLayout.NORTH);
-
-            mainFrame.mainPanel.add(tagsScrollPane, BorderLayout.WEST);
-            mainFrame.mainPanel.add(contentScrollPane, BorderLayout.CENTER);
-
+            fillTagList(tagsList, tagsFiles);
             tagsList.addListSelectionListener(listSelectionEvent -> {
                 try {
-                    contentPanel.removeAll();
-                    contentPanel.revalidate();
-
-                    BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
-
-                    ArrayList<File> tagedImage = new ArrayList<>();
-
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        File image = new File("storage/images/" + line);
-                        tagedImage.add(image);
-                    }
-
-                    tagedImage.sort((f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
-
-                    for (int i = 0; i < tagedImage.size(); i++) {
-                        File image = tagedImage.get(i);
-
-                        contentPanel.add(new ImageLabel(image, contentPanel, mainFrame));
-                    }
-
-                    contentPanel.revalidate();
-                    contentPanel.repaint();
+                    setTagsListAction(contentPanel, tagsList, mainFrame);
                 } catch (FileNotFoundException e) {
-                    //e.printStackTrace();                                                                                  // It's OK
                 } catch (IOException e) {
                     e.printStackTrace();
                     int confirmDelete = JOptionPane.showConfirmDialog(null,
@@ -101,7 +35,86 @@ public class TagsWindow {
                     }
                 }
             });
+
+            JScrollPane tagsScrollPane = new JScrollPane(tagsList);
+            tagsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            tagsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            tagsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            mainFrame.mainPanel.add(tagsScrollPane, BorderLayout.WEST);
+
+            JScrollPane contentScrollPane = new JScrollPane(contentPanel);
+            contentScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            mainFrame.mainPanel.add(contentScrollPane, BorderLayout.CENTER);
+
+            JTextField searchField = new JTextField();
+            searchField.addCaretListener(caretEvent -> {
+                ArrayList<String> searchedTags = new ArrayList<>();
+                searchTags(tagsFiles, searchedTags, searchField.getText());
+
+                tagsList.setListData(searchedTags.toArray(String[]::new));
+
+                mainFrame.revalidate();
+                mainFrame.repaint();
+            });
+            mainFrame.mainPanel.add(searchField, BorderLayout.NORTH);
+
+
             mainFrame.revalidate();
         }
+    }
+
+    private String[] getTags(){
+        File[] filesArr = new File("storage/tags/").listFiles();
+
+        Arrays.sort(filesArr, (f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
+
+        String[] tagsFiles = new String[filesArr.length];
+        for (int i = 0; i < tagsFiles.length; i++)
+            tagsFiles[i] = filesArr[i].getName();
+
+
+        return tagsFiles;
+    }
+
+    private void fillTagList(JList<String> tagsList, String[] tagsFile){
+        ArrayList<String> allTags = new ArrayList<>();
+        for (int i = 0; i < tagsFile.length; i++)
+            allTags.add(tagsFile[i]);
+        tagsList.setListData(allTags.toArray(String[]::new));
+    }
+
+    private void setTagsListAction(JPanel contentPanel, JList<String> tagsList, MainFrame mainFrame)
+                                    throws FileNotFoundException, IOException{
+        contentPanel.removeAll();
+        contentPanel.revalidate();
+
+        BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
+
+        ArrayList<File> tagedImage = new ArrayList<>();
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            File image = new File("storage/images/" + line);
+            tagedImage.add(image);
+        }
+
+        tagedImage.sort((f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
+
+        for (int i = 0; i < tagedImage.size(); i++) {
+            File image = tagedImage.get(i);
+
+            contentPanel.add(new ImageLabel(image, contentPanel, mainFrame));
+        }
+
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void searchTags( String[] tagsFiles, ArrayList<String> searchedTags, String search){
+        for (int i = 0; i < tagsFiles.length; i++)
+            if (tagsFiles[i].contains(search))
+                searchedTags.add(tagsFiles[i]);
     }
 }

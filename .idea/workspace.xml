@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e98e91ad-49a1-4159-915d-b334e3956b82" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/MainFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/MemeWindow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/TagsWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ImageLabel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ImageLabel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Localization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Localization.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MemeStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MemeStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Settings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TagsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TagsWindow.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +34,7 @@
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.0" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunManager">
@@ -69,29 +64,49 @@
       <option name="presentableId" value="Default" />
       <updated>1584719368878</updated>
     </task>
+    <task id="LOCAL-00001" summary="Refactoring">
+      <created>1596382982414</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1596382982414</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Refactoring" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactoring" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="743" y="279" width="424" height="483" key="FileChooserDialogImpl" timestamp="1587847676275">
-      <screen x="0" y="0" width="1920" height="1042" />
-    </state>
-    <state x="743" y="279" width="424" height="483" key="FileChooserDialogImpl/0.0.1920.1042@0.0.1920.1042" timestamp="1587847676275" />
-    <state width="1874" height="278" key="GridCell.Tab.0.bottom" timestamp="1596382563399">
+    <state x="582" y="88" key="CommitChangelistDialog2" timestamp="1596382982200">
       <screen x="0" y="0" width="1920" height="1054" />
     </state>
-    <state width="1874" height="278" key="GridCell.Tab.0.bottom/0.0.1920.1054@0.0.1920.1054" timestamp="1596382563399" />
-    <state width="1874" height="278" key="GridCell.Tab.0.center" timestamp="1596382563398">
+    <state x="582" y="88" key="CommitChangelistDialog2/0.0.1920.1054@0.0.1920.1054" timestamp="1596382982200" />
+    <state width="1874" height="278" key="GridCell.Tab.0.bottom" timestamp="1597179457811">
       <screen x="0" y="0" width="1920" height="1054" />
     </state>
-    <state width="1874" height="278" key="GridCell.Tab.0.center/0.0.1920.1054@0.0.1920.1054" timestamp="1596382563398" />
-    <state width="1874" height="278" key="GridCell.Tab.0.left" timestamp="1596382563398">
+    <state width="1874" height="278" key="GridCell.Tab.0.bottom/0.0.1920.1054@0.0.1920.1054" timestamp="1597179457811" />
+    <state width="1874" height="278" key="GridCell.Tab.0.center" timestamp="1597179457811">
       <screen x="0" y="0" width="1920" height="1054" />
     </state>
-    <state width="1874" height="278" key="GridCell.Tab.0.left/0.0.1920.1054@0.0.1920.1054" timestamp="1596382563398" />
-    <state width="1874" height="278" key="GridCell.Tab.0.right" timestamp="1596382563399">
+    <state width="1874" height="278" key="GridCell.Tab.0.center/0.0.1920.1054@0.0.1920.1054" timestamp="1597179457811" />
+    <state width="1874" height="278" key="GridCell.Tab.0.left" timestamp="1597179457811">
       <screen x="0" y="0" width="1920" height="1054" />
     </state>
-    <state width="1874" height="278" key="GridCell.Tab.0.right/0.0.1920.1054@0.0.1920.1054" timestamp="1596382563399" />
+    <state width="1874" height="278" key="GridCell.Tab.0.left/0.0.1920.1054@0.0.1920.1054" timestamp="1597179457811" />
+    <state width="1874" height="278" key="GridCell.Tab.0.right" timestamp="1597179457811">
+      <screen x="0" y="0" width="1920" height="1054" />
+    </state>
+    <state width="1874" height="278" key="GridCell.Tab.0.right/0.0.1920.1054@0.0.1920.1054" timestamp="1597179457811" />
+    <state x="556" y="263" key="Vcs.Push.Dialog.v2" timestamp="1596382985995">
+      <screen x="0" y="0" width="1920" height="1054" />
+    </state>
+    <state x="556" y="263" key="Vcs.Push.Dialog.v2/0.0.1920.1054@0.0.1920.1054" timestamp="1596382985995" />
+    <state x="335" y="140" width="1247" height="778" key="new project wizard" timestamp="1596545165385">
+      <screen x="0" y="0" width="1920" height="1054" />
+    </state>
+    <state x="335" y="140" width="1247" height="778" key="new project wizard/0.0.1920.1054@0.0.1920.1054" timestamp="1596545165385" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/MemeStorage$MemeStorage.ic" NAME="MemeStorage Coverage Results" MODIFIED="1585581816835" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
