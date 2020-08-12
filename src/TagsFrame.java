@@ -21,30 +21,33 @@ public class TagsFrame extends JFrame {
         mainPanel.setLayout(new GridLayout(0,1));
 
         JLabel tagsLabel = new JLabel("Tags");
+        mainPanel.add(tagsLabel);
 
-        JTextArea tags = new JTextArea();
-        tags.setFont(new Font(" ", Font.PLAIN, 25));
-
-        String[] tagsArr = getThisImageTags();
-        String thisImageTags = "";
-        for(int i = 0; i < tagsArr.length; i++)
-            thisImageTags += tagsArr[i] + ((i!=tagsArr.length-1)?"\n":"");
-        tags.setText(thisImageTags);
+        JTextArea tagArea = new JTextArea();
+        tagArea.setFont(new Font(" ", Font.PLAIN, 25));
+        fillTagArea(tagArea);
+        mainPanel.add(new JScrollPane(tagArea));
 
         JButton acceptButton = new JButton("Accept");
         acceptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                acceptTags(tags.getText().split("\n"));
+                acceptTags(tagArea.getText().split("\n"));
                 frame.dispose();
             }
         });
-
-        mainPanel.add(tagsLabel);
-        mainPanel.add(new JScrollPane(tags));
         mainPanel.add(acceptButton);
 
         setContentPane(mainPanel);
+    }
+
+    private void fillTagArea(JTextArea tagArea){
+        String[] tagsArr = getThisImageTags();
+        String thisImageTags = "";
+        for(int i = 0; i < tagsArr.length; i++)
+            thisImageTags += tagsArr[i] + ((i!=tagsArr.length-1)?"\n":"");
+
+        tagArea.setText(thisImageTags);
     }
 
     private void acceptTags(String[] tags){

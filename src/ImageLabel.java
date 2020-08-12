@@ -38,7 +38,8 @@ public class ImageLabel extends JLabel {
                     JMenuItem tagsImage = new JMenuItem("Tags");
                     tagsImage.addActionListener(actionEvent -> {
                         TagsFrame tagsFrame = new TagsFrame(image);
-                        tagsFrame.setBounds(imageLabel.getBounds().x, imageLabel.getBounds().y, 400, 400);
+                        tagsFrame.setSize(400, 400);
+                        tagsFrame.setLocation(getLocationOnScreen());
                     });
                     imageSettingsMenu.add(tagsImage);
 
