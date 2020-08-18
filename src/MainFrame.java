@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Random;
+import java.util.UUID;
 
 public class MainFrame extends JFrame {
     public JPanel mainPanel = null;
@@ -110,7 +111,7 @@ public class MainFrame extends JFrame {
             Image image = (Image) transferableImg.getTransferData(DataFlavor.imageFlavor);
             ImageIO.write((BufferedImage)image,
                     Settings.defaultSaveFormat,
-                    new File("storage/images/" + generateName()));
+                    new File("storage/images/" + UUID.randomUUID() + "." + Settings.defaultSaveFormat));
             new MemeWindow(this);
         } catch (UnsupportedFlavorException e) {
             JOptionPane.showMessageDialog(null,
@@ -233,28 +234,5 @@ public class MainFrame extends JFrame {
         mainPanel.add(versionLabel);
 
         infoFrame.revalidate();
-    }
-
-    String generateName(){
-        String name;
-        do{
-            name = "img-";
-
-            String[] letters = {
-                    "Q", "q", "W", "w", "E", "e", "R", "r", "T", "t", "Y", "y", "U", "u", "I", "i", "O", "o", "P", "p",
-                    "A", "a", "S", "s", "D", "d", "F", "f", "G", "g", "H", "h", "J", "j", "K", "k", "L", "l",
-                    "Z", "z", "X", "x", "C", "c", "V", "v", "B", "b", "N", "n", "M", "m",
-                    "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
-            };
-
-            for(int i = 0 ; i < 16; i++){
-                name += letters[new Random().nextInt(letters.length)];
-            }
-
-            name += "." + Settings.defaultSaveFormat;
-        }while(new File("storage/images/" + name).exists());
-
-
-        return name;
     }
 }
