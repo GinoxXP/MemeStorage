@@ -18,8 +18,8 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class MemeStorage {
-    MainFrame mainFrame;
-    public MemeStorage() {
+    private MainFrame mainFrame;
+    private MemeStorage() {
         checkFiles();
 
         Settings.load();
@@ -29,7 +29,7 @@ public class MemeStorage {
         setTrayIcon();
     }
 
-    void checkFiles() {
+    private void checkFiles() {
         if(!new File("storage/").exists())
             new File("storage/").mkdir();
 
@@ -40,7 +40,7 @@ public class MemeStorage {
             new File("storage/tags/").mkdir();
     }
 
-    void setTrayIcon(){
+    private void setTrayIcon(){
         if(!SystemTray.isSupported())
             return;
 

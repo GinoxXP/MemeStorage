@@ -13,62 +13,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Random;
 import java.util.UUID;
 
 public class MainFrame extends JFrame {
-    public JPanel mainPanel = null;
+    private JPanel mainPanel = null;
     final String VERSION = "0.9.5";
 
     public MainFrame(){
         setFrameSettings();
-        buildMainFrame();
         clearSystemTray();
+        buildMainFrame();
+
     }
 
-    void buildMainFrame(){
-        mainPanel = new JPanel();
-
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-        add(scrollPane);
-
-        JMenuBar menuBar = new JMenuBar();
-        setJMenuBar(menuBar);
-
-        JMenu showMenu = new JMenu(Localization.getMenuShow());
-        menuBar.add(showMenu);
-
-        JMenuItem showAllItem = new JMenuItem(Localization.getButtonShowAll());
-        showAllItem.addActionListener(actionEvent -> new MemeWindow(this));
-        showMenu.add(showAllItem);
-
-        JMenuItem showTagImageItem = new JMenuItem(Localization.getButtonShowTagImages());
-        showTagImageItem.addActionListener(actionEvent -> new TagsWindow(this));
-        showMenu.add(showTagImageItem);
-
-        JMenuItem addImageFromClipboard = new JMenuItem(Localization.getButtonAddImage());
-        addImageFromClipboard.addActionListener(actionEvent -> addImageFromClipboard());
-        menuBar.add(addImageFromClipboard);
-
-        JMenu propertiesMenu = new JMenu(Localization.getMenuProperties());
-        menuBar.add(propertiesMenu);
-
-        JMenuItem settings = new JMenuItem(Localization.getButtonSettings());
-        settings.addActionListener(actionEvent -> showSettings());
-        propertiesMenu.add(settings);
-
-        JMenuItem info = new JMenuItem(Localization.getButtonInfo());
-        info.addActionListener(actionEvent -> showInfo());
-        propertiesMenu.add(info);
-
-        new MemeWindow(this);
-    }
-
-    void setFrameSettings(){
+    private void setFrameSettings(){
         setTitle(Localization.getTitle());
 
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -99,12 +57,54 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    void clearSystemTray(){
+    private void clearSystemTray(){
         for(int i = 0; i < SystemTray.getSystemTray().getTrayIcons().length; i++)
             SystemTray.getSystemTray().remove(SystemTray.getSystemTray().getTrayIcons()[i]);
     }
 
-    void addImageFromClipboard(){
+    private void buildMainFrame(){
+        mainPanel = new JPanel();
+
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        add(scrollPane);
+
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+
+            JMenu showMenu = new JMenu(Localization.getMenuShow());
+            menuBar.add(showMenu);
+
+                JMenuItem showAllItem = new JMenuItem(Localization.getButtonShowAll());
+                showAllItem.addActionListener(actionEvent -> new MemeWindow(this));
+                showMenu.add(showAllItem);
+
+                JMenuItem showTagImageItem = new JMenuItem(Localization.getButtonShowTagImages());
+                showTagImageItem.addActionListener(actionEvent -> new TagsWindow(this));
+                showMenu.add(showTagImageItem);
+
+            JMenuItem addImageFromClipboard = new JMenuItem(Localization.getButtonAddImage());
+            addImageFromClipboard.addActionListener(actionEvent -> addImageFromClipboard());
+            menuBar.add(addImageFromClipboard);
+
+            JMenu propertiesMenu = new JMenu(Localization.getMenuProperties());
+            menuBar.add(propertiesMenu);
+
+                JMenuItem settings = new JMenuItem(Localization.getButtonSettings());
+                settings.addActionListener(actionEvent -> showSettings());
+                propertiesMenu.add(settings);
+
+                JMenuItem info = new JMenuItem(Localization.getButtonInfo());
+                info.addActionListener(actionEvent -> showInfo());
+                propertiesMenu.add(info);
+
+        new MemeWindow(this);
+    }
+
+    private void addImageFromClipboard(){
         Transferable transferableImg = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 
         try {
@@ -123,7 +123,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    void showSettings(){
+    private void showSettings(){
         JFrame settingsFrame = new JFrame(Localization.getButtonSettings());
         settingsFrame.setVisible(true);
         settingsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -179,7 +179,7 @@ public class MainFrame extends JFrame {
         settingsFrame.revalidate();
     }
 
-    void showInfo(){
+    private void showInfo(){
         JFrame infoFrame = new JFrame(Localization.getButtonInfo());
         infoFrame.setVisible(true);
         infoFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -234,5 +234,9 @@ public class MainFrame extends JFrame {
         mainPanel.add(versionLabel);
 
         infoFrame.revalidate();
+    }
+
+    public JPanel getMainPanel() {
+        return mainPanel;
     }
 }

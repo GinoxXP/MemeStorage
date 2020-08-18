@@ -1,8 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -37,9 +35,9 @@ public class ImageLabel extends JLabel {
 
                     JMenuItem tagsImage = new JMenuItem("Tags");
                     tagsImage.addActionListener(actionEvent -> {
-                        TagsFrame tagsFrame = new TagsFrame(image);
-                        tagsFrame.setSize(400, 400);
-                        tagsFrame.setLocation(getLocationOnScreen());
+                        TagsEditFrame tagsEditFrame = new TagsEditFrame(image);
+                        tagsEditFrame.setSize(400, 400);
+                        tagsEditFrame.setLocation(getLocationOnScreen());
                     });
                     imageSettingsMenu.add(tagsImage);
 

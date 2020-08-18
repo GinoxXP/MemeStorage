@@ -5,17 +5,21 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 
-public class TagsFrame extends JFrame {
+public class TagsEditFrame extends JFrame {
     private File image;
     private Frame frame;
 
-    TagsFrame(File image){
+    public TagsEditFrame(File image){
+        this.image = image;
+        this.frame = this;
+
+        buildUI();
+    }
+
+    private void buildUI(){
         setTitle("Tags");
         setVisible(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        this.image = image;
-        this.frame = this;
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(0,1));
@@ -29,12 +33,9 @@ public class TagsFrame extends JFrame {
         mainPanel.add(new JScrollPane(tagArea));
 
         JButton acceptButton = new JButton("Accept");
-        acceptButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                acceptTags(tagArea.getText().split("\n"));
-                frame.dispose();
-            }
+        acceptButton.addActionListener(actionEvent -> {
+            acceptTags(tagArea.getText().split("\n"));
+            frame.dispose();
         });
         mainPanel.add(acceptButton);
 
@@ -54,16 +55,16 @@ public class TagsFrame extends JFrame {
         String[] thisImageTags = getThisImageTags();
 
         for(String tag : thisImageTags){
-            removeTag(tag);
+            removeTagFile(tag);
         }
         for(String tag : tags){
-            addTag(tag);
+            addTagFile(tag);
         }
 
-        checkEmptyTags();
+        removeEmptyTagFiles();
     }
 
-    private void removeTag(String tag){
+    private void removeTagFile(String tag){
         File sourceFile = new File("storage/tags/" + tag);
         File newFile = new File("storage/tags/" + "." + tag);
 
@@ -92,7 +93,7 @@ public class TagsFrame extends JFrame {
 
     }
 
-    private void addTag(String tag){
+    private void addTagFile(String tag){
         File file = new File("storage/tags/" + tag);
         if(!file.exists()){
             try {
@@ -111,7 +112,7 @@ public class TagsFrame extends JFrame {
         }
     }
 
-    private void checkEmptyTags(){
+    private void removeEmptyTagFiles(){
         File[] fileArr = new File("storage/tags").listFiles();
         for(int i = 0; i < fileArr.length; i++){
             try {
@@ -132,18 +133,6 @@ public class TagsFrame extends JFrame {
                 e.printStackTrace();
             }
         }
-    }
-
-    private String[] getAllTags(){
-        ArrayList<String> tagsArrayList = new ArrayList<>();
-
-        File[] fileArr = new File("storage/tags").listFiles();
-        for(File file : fileArr)
-            tagsArrayList.add(file.getName());
-
-        String[] tags = {};
-        tags= tagsArrayList.toArray(tags);
-        return tags;
     }
 
     private String[] getThisImageTags(){

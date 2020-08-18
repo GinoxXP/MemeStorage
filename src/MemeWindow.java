@@ -10,8 +10,8 @@ public class MemeWindow {
         buildUI(mainFrame);
     }
 
-    void buildUI(MainFrame mainFrame){
-        mainFrame.mainPanel.removeAll();
+    private void buildUI(MainFrame mainFrame){
+        mainFrame.getMainPanel().removeAll();
 
         fillImages(mainFrame);
 
@@ -19,12 +19,11 @@ public class MemeWindow {
         mainFrame.repaint();
     }
 
-    void fillImages(MainFrame mainFrame){
+    private void fillImages(MainFrame mainFrame){
         JPanel contentPanel = new JPanel(new GridLayout(0,5));
+
         File[] files = new File("storage/images").listFiles();
-
         Arrays.sort(files, (f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
-
         for(int i = 0; i < files.length; i++)
         {
             File image = files[i];
@@ -35,6 +34,6 @@ public class MemeWindow {
             }
         }
 
-        mainFrame.mainPanel.add(contentPanel);
+        mainFrame.getMainPanel().add(contentPanel);
     }
 }

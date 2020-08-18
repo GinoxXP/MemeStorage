@@ -10,9 +10,9 @@ public class TagsWindow {
         buildUI(mainFrame);
     }
 
-    void buildUI(MainFrame mainFrame) {
-        mainFrame.mainPanel.removeAll();
-        mainFrame.mainPanel.setLayout(new BorderLayout());
+    private void buildUI(MainFrame mainFrame) {
+        mainFrame.getMainPanel().removeAll();
+        mainFrame.getMainPanel().setLayout(new BorderLayout());
 
         JPanel contentPanel = new JPanel(new GridLayout(0, 5));
 
@@ -20,33 +20,21 @@ public class TagsWindow {
         if (tagsFiles.length > 0) {
             JList<String> tagsList = new JList<>();
             fillTagList(tagsList, tagsFiles);
-            tagsList.addListSelectionListener(listSelectionEvent -> {
-                try {
-                    setTagsListAction(contentPanel, tagsList, mainFrame);
-                } catch (FileNotFoundException e) {
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    int confirmDelete = JOptionPane.showConfirmDialog(null,
-                            Localization.getMessageTagEmptyOrDamaged(),
-                            Localization.getMessageTitleTagIsEmpty(),
-                            JOptionPane.YES_NO_OPTION);
-                    if (confirmDelete == JOptionPane.YES_OPTION) {
-                        new File("storage/tags/" + tagsList.getSelectedValue()).delete();
-                    }
-                }
-            });
+            tagsList.addListSelectionListener(listSelectionEvent ->
+                setTagsListAction(contentPanel, tagsList, mainFrame)
+            );
 
             JScrollPane tagsScrollPane = new JScrollPane(tagsList);
             tagsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             tagsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             tagsScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-            mainFrame.mainPanel.add(tagsScrollPane, BorderLayout.WEST);
+            mainFrame.getMainPanel().add(tagsScrollPane, BorderLayout.WEST);
 
             JScrollPane contentScrollPane = new JScrollPane(contentPanel);
             contentScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-            mainFrame.mainPanel.add(contentScrollPane, BorderLayout.CENTER);
+            mainFrame.getMainPanel().add(contentScrollPane, BorderLayout.CENTER);
 
             JTextField searchField = new JTextField();
             searchField.addCaretListener(caretEvent -> {
@@ -58,7 +46,7 @@ public class TagsWindow {
                 mainFrame.revalidate();
                 mainFrame.repaint();
             });
-            mainFrame.mainPanel.add(searchField, BorderLayout.NORTH);
+            mainFrame.getMainPanel().add(searchField, BorderLayout.NORTH);
 
 
             mainFrame.revalidate();
@@ -85,29 +73,40 @@ public class TagsWindow {
         tagsList.setListData(allTags.toArray(String[]::new));
     }
 
-    private void setTagsListAction(JPanel contentPanel, JList<String> tagsList, MainFrame mainFrame)
-                                    throws FileNotFoundException, IOException{
+    private void setTagsListAction(JPanel contentPanel, JList<String> tagsList, MainFrame mainFrame) {
         contentPanel.removeAll();
         contentPanel.revalidate();
 
-        BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("storage/tags/" + tagsList.getSelectedValue()));
 
-        ArrayList<File> tagedImage = new ArrayList<>();
+            ArrayList<File> tagedImage = new ArrayList<>();
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            File image = new File("storage/images/" + line);
-            tagedImage.add(image);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                File image = new File("storage/images/" + line);
+                tagedImage.add(image);
+            }
+
+            tagedImage.sort((f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
+
+            for (int i = 0; i < tagedImage.size(); i++) {
+                File image = tagedImage.get(i);
+
+                contentPanel.add(new ImageLabel(image, contentPanel, mainFrame));
+            }
+
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+            int confirmDelete = JOptionPane.showConfirmDialog(null,
+                    Localization.getMessageTagEmptyOrDamaged(),
+                    Localization.getMessageTitleTagIsEmpty(),
+                    JOptionPane.YES_NO_OPTION);
+            if (confirmDelete == JOptionPane.YES_OPTION) {
+                new File("storage/tags/" + tagsList.getSelectedValue()).delete();
+            }
         }
-
-        tagedImage.sort((f1, f2) -> Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()));
-
-        for (int i = 0; i < tagedImage.size(); i++) {
-            File image = tagedImage.get(i);
-
-            contentPanel.add(new ImageLabel(image, contentPanel, mainFrame));
-        }
-
         contentPanel.revalidate();
         contentPanel.repaint();
     }
