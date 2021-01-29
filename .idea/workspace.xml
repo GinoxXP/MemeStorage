@@ -20,13 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e98e91ad-49a1-4159-915d-b334e3956b82" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localizations/eng.xml" beforeDir="false" afterPath="$PROJECT_DIR$/localizations/eng.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/localizations/ru.xml" beforeDir="false" afterPath="$PROJECT_DIR$/localizations/ru.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Localization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Localization.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MainFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/MemeWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/MemeWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TagsWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TagsWindow.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +118,14 @@
       <option name="project" value="LOCAL" />
       <updated>1597784565903</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Optimization for big library">
+      <created>1611922098397</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1611922098397</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,7 +142,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Refactoring" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactoring" />
+    <MESSAGE value="Optimization for big library" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimization for big library" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

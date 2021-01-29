@@ -80,7 +80,7 @@ public class MemeWindow {
         JLabel pageTextUp = new JLabel(Localization.getPage() + " " + currentPage + " / " + pageCount, SwingConstants.CENTER);
         mainFrame.getMainPanel().add(pageTextUp, BorderLayout.NORTH);
 
-        JLabel pageTextDown = new JLabel(Localization.getPage() + " " + currentPage + " / " + pageCount);
-        mainFrame.getMainPanel().add(pageTextDown, BorderLayout.SOUTH, SwingConstants.CENTER);
+        JLabel pageTextDown = new JLabel(Localization.getPage() + " " + currentPage + " / " + pageCount, SwingConstants.CENTER);
+        mainFrame.getMainPanel().add(pageTextDown, BorderLayout.SOUTH);
     }
 }
