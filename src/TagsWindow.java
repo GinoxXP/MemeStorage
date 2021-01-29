@@ -1,16 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TagsWindow {
+    private MainFrame mainFrame;
 
     public TagsWindow(MainFrame mainFrame){
-        buildUI(mainFrame);
+        this.mainFrame = mainFrame;
+        buildUI();
     }
 
-    private void buildUI(MainFrame mainFrame) {
+    private void buildUI() {
         mainFrame.getMainPanel().removeAll();
         mainFrame.getMainPanel().setLayout(new BorderLayout());
 
@@ -21,8 +25,16 @@ public class TagsWindow {
             JList<String> tagsList = new JList<>();
             fillTagList(tagsList, tagsFiles);
             tagsList.addListSelectionListener(listSelectionEvent ->
-                setTagsListAction(contentPanel, tagsList, mainFrame)
+                setTagsListAction(contentPanel, tagsList)
             );
+            tagsList.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(e.getButton() == MouseEvent.BUTTON2){
+                        System.out.println(tagsList.getModel().getElementAt(tagsList.getSelectedIndex()));
+                    }
+                }
+            });
 
             JScrollPane tagsScrollPane = new JScrollPane(tagsList);
             tagsScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -73,7 +85,7 @@ public class TagsWindow {
         tagsList.setListData(allTags.toArray(String[]::new));
     }
 
-    private void setTagsListAction(JPanel contentPanel, JList<String> tagsList, MainFrame mainFrame) {
+    private void setTagsListAction(JPanel contentPanel, JList<String> tagsList) {
         contentPanel.removeAll();
         contentPanel.revalidate();
 

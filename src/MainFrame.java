@@ -17,28 +17,39 @@ import java.util.UUID;
 
 public class MainFrame extends JFrame {
     private JPanel mainPanel = null;
-    final String VERSION = "0.9.5";
+
+    private final String VERSION = "0.9.5";
+    private String iconPath = "files/icon32.png";
 
     public MainFrame(){
         setFrameSettings();
         clearSystemTray();
         buildMainFrame();
-
     }
 
     private void setFrameSettings(){
         setTitle(Localization.getTitle());
 
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
+        setIcon();
+
+        setHotKeys();
+
+        setSize(750,450);
+        setVisible(true);
+    }
+    private void setIcon(){
         try {
-            setIconImage(ImageIO.read(new File("files/icon32.png")));
+            setIconImage(ImageIO.read(new File(iconPath)));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,
                     Localization.getMessageIconCantLoad(),
                     Localization.getMessageIconCantLoad(),
                     JOptionPane.ERROR_MESSAGE);
         }
-
+    }
+    private void setHotKeys(){
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -52,9 +63,6 @@ public class MainFrame extends JFrame {
                     System.exit(0);
             }
         });
-
-        setSize(750,450);
-        setVisible(true);
     }
 
     private void clearSystemTray(){
@@ -101,9 +109,9 @@ public class MainFrame extends JFrame {
                 info.addActionListener(actionEvent -> showInfo());
                 propertiesMenu.add(info);
 
+
         new MemeWindow(this);
     }
-
     private void addImageFromClipboard(){
         Transferable transferableImg = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 
@@ -122,7 +130,6 @@ public class MainFrame extends JFrame {
             e.printStackTrace();
         }
     }
-
     private void showSettings(){
         JFrame settingsFrame = new JFrame(Localization.getButtonSettings());
         settingsFrame.setVisible(true);
@@ -178,7 +185,6 @@ public class MainFrame extends JFrame {
 
         settingsFrame.revalidate();
     }
-
     private void showInfo(){
         JFrame infoFrame = new JFrame(Localization.getButtonInfo());
         infoFrame.setVisible(true);

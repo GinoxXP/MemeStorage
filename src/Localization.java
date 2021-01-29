@@ -33,6 +33,8 @@ public class Localization {
 
     private static String TrayMenuButtonClose;
 
+    private static String Page;
+
     public static void load(String localization){
         if(!new File(localization).exists())
             localization = "localizations/eng.xml";
@@ -69,6 +71,8 @@ public class Localization {
                         case "MessageTitleClipboardEmpty":MessageTitleClipboardEmpty = content;break;
 
                         case "TrayMenuButtonClose":TrayMenuButtonClose = content;break;
+
+                        case "Page":Page = content;break;
                     }
                 }
             }
@@ -156,4 +160,6 @@ public class Localization {
     public static String getMessageTitleClipboardEmpty() {
         return MessageTitleClipboardEmpty;
     }
+
+    public static String getPage(){return Page;}
 }

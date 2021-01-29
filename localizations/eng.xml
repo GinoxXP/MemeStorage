@@ -26,6 +26,8 @@
     
     <!--Tray menu-->
     <TrayMenuButtonClose>Close</TrayMenuButtonClose>
+
+    <Page>Page</Page>
     
     <!--Info about localization autor-->
     <LocalizationAuthor>GinoxXP</LocalizationAuthor>
